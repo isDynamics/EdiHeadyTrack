@@ -10,9 +10,11 @@
 #                                                                              #
 # **************************************************************************** #
 
-# TODO: add tests...
-# TODO: covering face with mesh?
-# TODO: Github organisation
+# TODO: unittests
+# TODO: codecov
+# TODO: make available on PyPi
+# TODO: update README.md
+# TODO: covering face with mesh? see masked piper softwareX
 
 import EdiHeadyTrack.calibrating    # for calibrating camera, extracting intrinsic parameters
 import EdiHeadyTrack.logging        # for opening csv files to write data to

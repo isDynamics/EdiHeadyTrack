@@ -11,11 +11,14 @@
 Made with [contrib.rocks](https://contrib.rocks).
 
 ## Table of contents
-* [About](#about)
-* [Technologies](#technologies)
-* [Setup](#setup)
-* [To Do](#to_do)
-* [Getting Involved](#getting_involved)
+- [EdiHeadyTrack](#ediheadytrack)
+  - [Table of contents](#table-of-contents)
+  - [About](#about)
+  - [Technologies](#technologies)
+  - [Setup](#setup)
+  - [To do](#to-do)
+  - [Getting Involved](#getting-involved)
+  - [Citations](#citations)
 
 
 ## About
