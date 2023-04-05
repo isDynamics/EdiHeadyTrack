@@ -5,7 +5,7 @@
 # EdiHeadyTrack
 
 <a href="https://github.com/ThomasAston/EdiHeadyTrack/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=younjames/trote3d" />
+  <img src="https://contrib.rocks/image?repo=ThomasAston/EdiHeadyTrack" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).
@@ -20,9 +20,8 @@ Made with [contrib.rocks](https://contrib.rocks).
   - [Getting Involved](#getting-involved)
   - [Citations](#citations)
 
-
 ## About
-EdiHeadyTrack is a Python package for measuring head kinematics using markerless head pose detection.
+EdiHeadyTrack is a Python package for measuring head kinematics using markerless head pose detection methods. The current implementation primarily uses the FaceMesh module of MediaPipe's Python API for facial landmark detection alongside OpenCV for handling simple computer vision tasks.
 	
 ## Technologies
 Project is created with:
