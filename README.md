@@ -1,10 +1,10 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) 
-[![Build Status - GitHub](https://github.com/younjames/trote3d/workflows/pytesting/badge.svg)](https://github.com/younjames/trote3d/actions/workflows/pytesting.yml)
-[![codecov](https://codecov.io/gh/younjames/trote3d/branch/main/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/younjames/trote3d)
+[![Build Status - GitHub](https://github.com/ThomasAston/EdiHeadyTrack/workflows/pytesting/badge.svg)](https://github.com/ThomasAston/EdiHeadyTrack/actions/workflows/pytesting.yml)
+[![codecov](https://codecov.io/gh/ThomasAston/EdiHeadyTrack/branch/master/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/younjames/trote3d)
 # EdiHeadyTrack
 
-<a href="https://github.com/younjames/trote3d/graphs/contributors">
+<a href="https://github.com/ThomasAston/EdiHeadyTrack/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=younjames/trote3d" />
 </a>
 
@@ -22,14 +22,14 @@ Made with [contrib.rocks](https://contrib.rocks).
 
 
 ## About
-PyTrote3d is a Python implementation of the Fortran 90 code Trote3D as written by Filipe Teixeira-Dias as part of his PhD thesis *Numerical simulation of tensile and shear tests in plane strain and plane stress* [[1][1]] [[2][2]].  
+EdiHeadyTrack is a Python package for measuring head kinematics using markerless head pose detection.
 	
 ## Technologies
 Project is created with:
-* Python 3.8.10
+* Python 3.9.0
 	
 ## Setup
-To run this project, enter
+<!-- To run this project, enter
 
 ```
 $ cd ../pytrote3d
@@ -42,22 +42,22 @@ The file that is run and the materials which are used are currently set in trote
 # Input file and materials file
 filename = 'Tinput.tro'
 material = 'materials.json'
-```
+``` -->
 ## To do
-- [ ] Complete conversion of Fortran 90 code to Python 3 and complete verification.
 - [ ] Write unit tests.
-- [ ] Specify input file and material when running command, not in python file.
-- [ ] Investigate application of multiprocessing.
+- [ ] Check coverage status
+- [ ] Upload to PyPI
+- [ ] Update READMe
 
 ## Getting Involved
-For any suggestions, please [create a new issue](https://github.com/younjames/trote3d/issues).
+For any suggestions, please [create a new issue](https://github.com/ThomasAston/EdiHeadyTrack/issues).
 
 ## Citations
-1. Teixeira-Dias, F. (1995). *Numerical simulation of tensile and shear tests in plane strain and plane stress* (Doctoral dissertation)
+<!-- 1. Teixeira-Dias, F. (1995). *Numerical simulation of tensile and shear tests in plane strain and plane stress* (Doctoral dissertation)
 2. Teixeira-Dias, F. and Menezes, L.F. (2001), *Numerical aspects of finite element simulations of residual stresses in metal matrix composites*. Int. J. Numer. Meth. Engng., 50: 629-644.
 
 
 [1]: https://www.researchgate.net/publication/237021517_Numerical_simulation_of_tensile_and_shear_tests_in_plane_strain_and_plane_stress
-[2]: https://doi.org/10.1002/1097-0207(20010130)50:3<629::AID-NME41>3.0.CO;2-7
+[2]: https://doi.org/10.1002/1097-0207(20010130)50:3<629::AID-NME41>3.0.CO;2-7 -->
 
 
