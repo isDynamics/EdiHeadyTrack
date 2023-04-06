@@ -43,7 +43,7 @@ pip install git+https:\\github.com/ThomasAston/EdiHeadyTrack
 ## Example
 An example output from EdiHeadyTrack is shown below:
 
-![Example image](https:\\github.com/ThomasAston/EdiHeadyTrack/../../../data/plot%20images/comparison.png)
+![Example image](https://github.com/ThomasAston/EdiHeadyTrack/blob/master/data/plot%20images/comparison.png)
 
 
 <!-- ## Change log
