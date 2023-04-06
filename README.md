@@ -1,7 +1,7 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) 
 [![Build Status - GitHub](https://github.com/ThomasAston/EdiHeadyTrack/workflows/pytesting/badge.svg)](https://github.com/ThomasAston/EdiHeadyTrack/actions/workflows/pytesting.yml)
-[![codecov](https://codecov.io/gh/ThomasAston/EdiHeadyTrack/branch/master/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/younjames/trote3d)
+[![codecov](https://codecov.io/gh/ThomasAston/EdiHeadyTrack/branch/master/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/ThomasAston/EdiHeadyTrack)
 # EdiHeadyTrack
 
 <a href="https://github.com/ThomasAston/EdiHeadyTrack/graphs/contributors">
@@ -39,6 +39,9 @@ Or install the latest development version directly from GitHub!
 ```bash
 pip install git+https:\\github.com/ThomasAston/EdiHeadyTrack
 ```
+
+## Usage
+
 
 ## Example
 An example output from EdiHeadyTrack is shown below:
