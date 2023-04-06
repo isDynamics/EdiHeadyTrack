@@ -7,3 +7,25 @@ import EdiHeadyTrack.filtering      # for filtering measured signals with Butter
 import EdiHeadyTrack.processing     # for calculating kinematics from measured displacements
 import EdiHeadyTrack.comparing      # for comparing values with sensor data 
 import EdiHeadyTrack.archiving      # for archiving outputs to ordered folder system
+
+
+def test_calibrating():
+    ...
+
+def test_logging():
+    ...
+
+def test_tracking():
+    ...
+
+def test_filtering():
+    ...
+
+def test_processing():
+    ...
+
+def test_comparing():
+    ...
+
+def test_archiving():
+    ...
