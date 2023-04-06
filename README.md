@@ -4,6 +4,8 @@
 [![codecov](https://codecov.io/gh/isDynamics/EdiHeadyTrack/branch/master/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/isDynamics/EdiHeadyTrack)
 # EdiHeadyTrack
 
+## Contributors 
+
 <a href="https://github.com/isDynamics/EdiHeadyTrack/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=isDynamics/EdiHeadyTrack" />
 </a>
