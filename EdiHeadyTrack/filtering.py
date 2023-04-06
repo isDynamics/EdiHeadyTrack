@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/22 13:33:00 by taston            #+#    #+#              #
-#    Updated: 2023/04/05 13:55:13 by taston           ###   ########.fr        #
+#    Updated: 2023/04/06 08:38:08 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,7 +64,7 @@ def lowPassFilter(signal):
     Low pass filter parameters and utility
     '''
     fs = 4000
-    lowcut = 200
+    lowcut = 160
 
     nyq = 0.5 * fs
     low = lowcut / nyq

@@ -10,43 +10,78 @@
 
 Made with [contrib.rocks](https://contrib.rocks).
 
-## Table of contents
+<!-- ## Table of contents
 - [EdiHeadyTrack](#ediheadytrack)
   - [Table of contents](#table-of-contents)
   - [About](#about)
   - [Technologies](#technologies)
   - [Setup](#setup)
+  - [Citation](#citation)
   - [To do](#to-do)
   - [Getting Involved](#getting-involved)
-  - [Citations](#citations)
+  - [Citations](#citations) -->
 
 ## About
 EdiHeadyTrack is a Python package for measuring head kinematics using markerless head pose detection methods. The current implementation primarily uses the FaceMesh module of MediaPipe's Python API for facial landmark detection alongside OpenCV for handling simple computer vision tasks.
-	
+
+
 ## Technologies
 Project is created with:
 * Python 3.9.0
 	
 ## Setup
-<!-- To run this project, enter
-
-```
-$ cd ../pytrote3d
-$ python3 trote_3d.py
+EdiHeadyTrack is available on PyPI! Install using:
+```bash
+pip install EdiHeadyTrack
 ```
 
-The file that is run and the materials which are used are currently set in trote_3d.py by the following lines
-
+Or install the latest development version directly from GitHub!
+```bash
+pip install git+https:\\github.com/ThomasAston/EdiHeadyTrack
 ```
-# Input file and materials file
-filename = 'Tinput.tro'
-material = 'materials.json'
+
+## Example
+An example output from EdiHeadyTrack is shown below:
+
+![Example image](https:\\github.com/ThomasAston/EdiHeadyTrack/../../../data/plot%20images/comparison.png)
+
+
+<!-- ## Change log
+See [CHANGELOG.md](https://github.com/ThomasAston/EdiHeadyTrack/blob/master/CHANGELOG.md).
+
+
+## Contributing
+See [CONTRIBUTING.md](https://github.com/ThomasAston/EdiHeadyTrack/blob/master/CONTRIBUTING.md). -->
+
+
+## Citation
+If you use `EdiHeadyTrack` in you work, please cite the following publication:
+
+<!-- > S. Heldens, A. Sclocco, H. Dreuning, B. van Werkhoven, P. Hijma, J. Maassen & R.V. van Nieuwpoort (2022), "litstudy: A Python package for literature reviews", SoftwareX 20 -->
+
+
+As BibTeX:
+
+<!-- ```
+@article{litstudy,
+    title = {litstudy: A Python package for literature reviews},
+    journal = {SoftwareX},
+    volume = {20},
+    pages = {101207},
+    year = {2022},
+    issn = {2352-7110},
+    doi = {https://doi.org/10.1016/j.softx.2022.101207},
+    url = {https://www.sciencedirect.com/science/article/pii/S235271102200125X},
+    author = {S. Heldens and A. Sclocco and H. Dreuning and B. {van Werkhoven} and P. Hijma and J. Maassen and R. V. {van Nieuwpoort}},
+}
 ``` -->
+
+
 ## To do
 - [ ] Write unit tests.
 - [ ] Check coverage status
 - [ ] Upload to PyPI
-- [ ] Update READMe
+- [ ] Update setup section of README
 
 ## Getting Involved
 For any suggestions, please [create a new issue](https://github.com/ThomasAston/EdiHeadyTrack/issues).
