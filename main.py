@@ -28,9 +28,9 @@ def main():
     '''
     Worked example use of EdiHeadyTrack.
     '''
-    # EdiHeadyTrack.calibrating.calibrate('videos/calibration_xiaomi.mp4')
-    # EdiHeadyTrack.logging.log(show=True)
-    # EdiHeadyTrack.tracking.track('videos/head_240_final.mp4', maxFaces=1, show=True)
+    EdiHeadyTrack.calibrating.calibrate('videos/calibration_xiaomi.mp4')
+    EdiHeadyTrack.logging.log(show=True)
+    EdiHeadyTrack.tracking.track('videos/head_240_final.mp4', maxFaces=1, show=True)
     EdiHeadyTrack.filtering.filter('data/tracking data/output.csv', show=True)
     EdiHeadyTrack.processing.process('data/tracking data/output_filtered.csv', show=True)
     EdiHeadyTrack.comparing.compare('data/tracking data/output_final.csv', 
