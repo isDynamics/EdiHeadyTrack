@@ -10,8 +10,6 @@
 
 Made with [contrib.rocks](https://contrib.rocks).
 
-Made with [contrib.rocks](https://contrib.rocks).
-
 <!-- ## Table of contents
 - [EdiHeadyTrack](#ediheadytrack)
   - [Table of contents](#table-of-contents)
