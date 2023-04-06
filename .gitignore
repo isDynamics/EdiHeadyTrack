@@ -1,7 +1,7 @@
 # Videos/images
 *.mp4
 *.mov
-*.png
+data/tracking frames
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
