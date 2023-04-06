@@ -5,8 +5,8 @@
 # EdiHeadyTrack
 
 <a href="https://github.com/ThomasAston/EdiHeadyTrack/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ThomasAston/EdiHeadyTrack" />
 </a>
+  <img src="https://contrib.rocks/image?repo=ThomasAston/EdiHeadyTrack" />
 
 Made with [contrib.rocks](https://contrib.rocks).
 
