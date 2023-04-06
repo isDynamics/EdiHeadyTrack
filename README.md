@@ -1,12 +1,14 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) 
-[![Build Status - GitHub](https://github.com/ThomasAston/EdiHeadyTrack/workflows/pytesting/badge.svg)](https://github.com/ThomasAston/EdiHeadyTrack/actions/workflows/pytesting.yml)
-[![codecov](https://codecov.io/gh/ThomasAston/EdiHeadyTrack/branch/master/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/ThomasAston/EdiHeadyTrack)
+[![Build Status - GitHub](https://github.com/isDynamics/EdiHeadyTrack/workflows/pytesting/badge.svg)](https://github.com/isDynamics/EdiHeadyTrack/actions/workflows/pytesting.yml)
+[![codecov](https://codecov.io/gh/isDynamics/EdiHeadyTrack/branch/master/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/isDynamics/EdiHeadyTrack)
 # EdiHeadyTrack
 
-<a href="https://github.com/ThomasAston/EdiHeadyTrack/graphs/contributors">
+<a href="https://github.com/isDynamics/EdiHeadyTrack/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=isDynamics/EdiHeadyTrack" />
 </a>
-  <img src="https://contrib.rocks/image?repo=ThomasAston/EdiHeadyTrack" />
+
+Made with [contrib.rocks](https://contrib.rocks).
 
 Made with [contrib.rocks](https://contrib.rocks).
 
@@ -37,7 +39,7 @@ pip install EdiHeadyTrack
 
 Or install the latest development version directly from GitHub!
 ```bash
-pip install git+https:\\github.com/ThomasAston/EdiHeadyTrack
+pip install git+https:\\github.com/isDynamics/EdiHeadyTrack
 ```
 
 ## Usage
@@ -46,15 +48,15 @@ pip install git+https:\\github.com/ThomasAston/EdiHeadyTrack
 ## Example
 An example output from EdiHeadyTrack is shown below:
 
-![Example image](https://github.com/ThomasAston/EdiHeadyTrack/blob/master/data/plot%20images/comparison.png)
+![Example image](https://github.com/isDynamics/EdiHeadyTrack/blob/master/data/plot%20images/comparison.png)
 
 
 <!-- ## Change log
-See [CHANGELOG.md](https://github.com/ThomasAston/EdiHeadyTrack/blob/master/CHANGELOG.md).
+See [CHANGELOG.md](https://github.com/isDynamics/EdiHeadyTrack/blob/master/CHANGELOG.md).
 
 
 ## Contributing
-See [CONTRIBUTING.md](https://github.com/ThomasAston/EdiHeadyTrack/blob/master/CONTRIBUTING.md). -->
+See [CONTRIBUTING.md](https://github.com/isDynamics/EdiHeadyTrack/blob/master/CONTRIBUTING.md). -->
 
 
 ## Citation
@@ -87,7 +89,7 @@ As BibTeX:
 - [ ] Update setup section of README
 
 ## Getting Involved
-For any suggestions, please [create a new issue](https://github.com/ThomasAston/EdiHeadyTrack/issues).
+For any suggestions, please [create a new issue](https://github.com/isDynamics/EdiHeadyTrack/issues).
 
 ## Citations
 <!-- 1. Teixeira-Dias, F. (1995). *Numerical simulation of tensile and shear tests in plane strain and plane stress* (Doctoral dissertation)
