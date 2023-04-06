@@ -10,7 +10,7 @@ import EdiHeadyTrack.archiving      # for archiving outputs to ordered folder sy
 
 
 def test_calibrating():
-    ...
+    assert(EdiHeadyTrack.calibrating())
 
 def test_logging():
     ...

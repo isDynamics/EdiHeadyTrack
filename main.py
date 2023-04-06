@@ -10,6 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
+# TODO: lint code
 # TODO: unittests
 # TODO: codecov
 # TODO: make available on PyPi

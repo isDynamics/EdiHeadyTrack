@@ -6,11 +6,10 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/22 13:33:00 by taston            #+#    #+#              #
-#    Updated: 2023/04/06 08:38:08 by taston           ###   ########.fr        #
+#    Updated: 2023/04/06 15:04:19 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-from scipy.signal import filtfilt
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
