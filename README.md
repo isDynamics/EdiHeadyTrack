@@ -85,7 +85,6 @@ As BibTeX:
 
 ## To do
 - [ ] Write unit tests.
-- [ ] Get codecov working
 - [ ] Upload to PyPI
 - [ ] Update setup section of README
 
