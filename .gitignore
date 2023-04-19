@@ -1,6 +1,5 @@
 # Videos/images
-*.mp4
-*.mov
+videos_gitignore/
 data/tracking frames
 
 # Byte-compiled / optimized / DLL files
