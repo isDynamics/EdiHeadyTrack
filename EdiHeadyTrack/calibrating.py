@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/17 14:32:56 by taston            #+#    #+#              #
-#    Updated: 2023/04/05 13:59:58 by taston           ###   ########.fr        #
+#    Updated: 2023/04/19 12:32:13 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,13 @@ RECORD = True
 
 
 def calibrate(vid_file):
+    '''
+    Obtain the intrinsic camera parameters for the camera used
+    in a specified input video file. 
+
+    Method: https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html
+    '''
+    
     # Stop the iteration when specified
     # accuracy, epsilon, is reached or
     # specified number of iterations are completed.
@@ -42,13 +49,9 @@ def calibrate(vid_file):
     objectp3d[0, :, :2] = np.mgrid[0:CHECKERBOARD[0],
                                 0:CHECKERBOARD[1]].T.reshape(-1, 2)
     prev_img_shape = None
-
-    cap = cv2.VideoCapture(vid_file)
-    FPS = cap.get(cv2.CAP_PROP_FPS)
-
-    # Check if the webcam is opened correctly
-    if not cap.isOpened():
-        raise IOError("Cannot open webcam")
+    
+    # Open video file
+    cap, FPS = open_vid(vid_file)
         
     if RECORD:
             width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -142,3 +145,18 @@ def calibrate(vid_file):
     savetxt('data/calibration/translation_vectors.csv', mean_t, delimiter=',')
     savetxt('data/calibration/camera_matrix.csv', matrix, delimiter=',')
     savetxt('data/calibration/camera_distortion.csv', distortion, delimiter=',')
+
+
+def open_vid(vid_file):
+    cap = cv2.VideoCapture(vid_file)
+    FPS = cap.get(cv2.CAP_PROP_FPS)
+
+    # Check if the webcam is opened correctly
+    if not cap.isOpened():
+        raise IOError("Cannot open chosen video")
+
+    return cap, FPS
+# def initialise():
+#     '''
+#     Initialise  
+#     '''

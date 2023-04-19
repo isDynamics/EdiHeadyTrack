@@ -25,6 +25,7 @@ import EdiHeadyTrack.processing     # for calculating kinematics from measured d
 import EdiHeadyTrack.comparing      # for comparing values with sensor data 
 import EdiHeadyTrack.archiving      # for archiving outputs to ordered folder system
 
+
 def main():
     '''
     Worked example use of EdiHeadyTrack.
