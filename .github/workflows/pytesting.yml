@@ -44,10 +44,10 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+        file: coverage.xml
         # directory: ./coverage/reports/
         # env_vars: OS,PYTHON
         # fail_ci_if_error: true
-        file: ./coverage.xml
         # flags: unittests
         # name: codecov-umbrella
         # verbose: true
