@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/17 14:32:56 by taston            #+#    #+#              #
-#    Updated: 2023/04/19 12:32:13 by taston           ###   ########.fr        #
+#    Updated: 2023/04/19 13:54:13 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -147,6 +147,8 @@ def calibrate(vid_file):
     savetxt('data/calibration/camera_distortion.csv', distortion, delimiter=',')
 
 
+    # return f'{vid_file} calibration success'
+
 def open_vid(vid_file):
     cap = cv2.VideoCapture(vid_file)
     FPS = cap.get(cv2.CAP_PROP_FPS)
@@ -156,6 +158,9 @@ def open_vid(vid_file):
         raise IOError("Cannot open chosen video")
 
     return cap, FPS
+
+# def run_vid(vid_file):
+     
 # def initialise():
 #     '''
 #     Initialise  

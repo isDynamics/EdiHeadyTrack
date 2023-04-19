@@ -1,11 +1,20 @@
 import EdiHeadyTrack.calibrating    # for calibrating camera, extracting intrinsic parameters
 
+TEST_FILE = 'videos/calibration_xiaomi.mp4'
+
 def test_vid():
     '''
     Assert frames of video file can be read, and that video fps is greater than 0
     '''
-    assert EdiHeadyTrack.calibrating.open_vid('videos/calibration_xiaomi.mp4')[0].read()[0] == True
-    assert EdiHeadyTrack.calibrating.open_vid('videos/calibration_xiaomi.mp4')[1] > 0
+    assert EdiHeadyTrack.calibrating.open_vid(TEST_FILE)[0].read()[0] == True
+    assert EdiHeadyTrack.calibrating.open_vid(TEST_FILE)[1] > 0
+
+
+def test_calibrate():
+    '''
+    Assert that calibrate function runs without error
+    '''
+    assert EdiHeadyTrack.calibrating.calibrate(TEST_FILE) == None
 
 # def test_webcam():
 #     '''
