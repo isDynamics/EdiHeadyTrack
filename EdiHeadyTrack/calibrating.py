@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/17 14:32:56 by taston            #+#    #+#              #
-#    Updated: 2023/04/19 13:54:13 by taston           ###   ########.fr        #
+#    Updated: 2023/04/19 13:57:53 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -99,7 +99,7 @@ def calibrate(vid_file):
                                                 CHECKERBOARD,
                                                 corners2, ret)
     
-            cv2.imshow('img', image)
+            # cv2.imshow('img', image)
             
             if RECORD:
                 writer.write(image)
