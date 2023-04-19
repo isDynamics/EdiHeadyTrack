@@ -1,6 +1,7 @@
 # Videos/images
 videos_gitignore/
 data/tracking frames
+apitoken.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -6,13 +6,12 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/17 14:32:56 by taston            #+#    #+#              #
-#    Updated: 2023/04/19 13:57:53 by taston           ###   ########.fr        #
+#    Updated: 2023/04/19 16:25:17 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 import cv2
 import numpy as np
-import os
 from time import sleep
 
 # Define the dimensions of checkerboard
@@ -21,35 +20,18 @@ MIN_POINTS = 50
 RECORD = True
 
 
-def calibrate(vid_file):
+def calibrate(vid_file, show=False):
     '''
     Obtain the intrinsic camera parameters for the camera used
     in a specified input video file. 
 
     Method: https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html
     '''
-    
-    # Stop the iteration when specified
-    # accuracy, epsilon, is reached or
-    # specified number of iterations are completed.
-    criteria = (cv2.TERM_CRITERIA_EPS +
-                cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
-    
-    # Vector for the 3D points:
-    threedpoints = []
-    
-    # Vector for 2D points:
-    twodpoints = [] 
-    
-    # 3D points real world coordinates:
-    objectp3d = np.zeros((1, CHECKERBOARD[0]
-                        * CHECKERBOARD[1],
-                        3), np.float32)
-
-    objectp3d[0, :, :2] = np.mgrid[0:CHECKERBOARD[0],
-                                0:CHECKERBOARD[1]].T.reshape(-1, 2)
-    prev_img_shape = None
-    
+    min_points = 50
+    # Initialise criteria, vectors and matrices
+    checkerboard = (2,2)
+    criteria, threedpoints, twodpoints, objectp3d = initialise(checkerboard)
+    print(objectp3d)
     # Open video file
     cap, FPS = open_vid(vid_file)
         
@@ -60,7 +42,7 @@ def calibrate(vid_file):
                                     cv2.VideoWriter_fourcc(*'DIVX'),
                                     FPS,
                                     (width,height))
-            
+       
     while True:
             ret, img = cap.read()
             image = img
@@ -98,8 +80,9 @@ def calibrate(vid_file):
                 image = cv2.drawChessboardCorners(image,
                                                 CHECKERBOARD,
                                                 corners2, ret)
-    
-            # cv2.imshow('img', image)
+
+            if show == True:
+                cv2.imshow('img', image)
             
             if RECORD:
                 writer.write(image)
@@ -148,6 +131,27 @@ def calibrate(vid_file):
 
 
     # return f'{vid_file} calibration success'
+
+def initialise(checkerboard):
+    # Stopping criteria
+    criteria = (cv2.TERM_CRITERIA_EPS +
+                cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+    
+    # Vector for the 3D points:
+    threedpoints = []
+    
+    # Vector for 2D points:
+    twodpoints = [] 
+    
+    # 3D points real world coordinates:
+    objectp3d = np.zeros((1, checkerboard[0]
+                        * checkerboard[1],
+                        3), np.float32)
+
+    objectp3d[0, :, :2] = np.mgrid[0:checkerboard[0],
+                                0:checkerboard[1]].T.reshape(-1, 2)
+    
+    return criteria, threedpoints, twodpoints, objectp3d
 
 def open_vid(vid_file):
     cap = cv2.VideoCapture(vid_file)
