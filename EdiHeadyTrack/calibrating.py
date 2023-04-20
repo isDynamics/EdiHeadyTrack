@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/17 14:32:56 by taston            #+#    #+#              #
-#    Updated: 2023/04/20 14:03:07 by taston           ###   ########.fr        #
+#    Updated: 2023/04/20 14:41:05 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ def calibrate(vid_file, show=False):
     '''
     min_points = 50
     # Initialise criteria, vectors and matrices
-    checkerboard = (2,2)
+    checkerboard = (9,6)
     criteria, threedpoints, twodpoints, objectp3d = initialise(checkerboard)
     print(objectp3d)
     # Open video file

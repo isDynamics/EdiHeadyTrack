@@ -26,6 +26,8 @@ from .archiving import(
     archive
 )
 
+from .resources import *
+
 __all__ = [
     "calibrate",
     "log",
