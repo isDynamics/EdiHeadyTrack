@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "EdiHeadyTrack"
-version = "0.0.1"
+version = "0.0.6"
 authors = [
   { name="Thomas Aston", email="thomas.aston@ed.ac.uk" },
 ]

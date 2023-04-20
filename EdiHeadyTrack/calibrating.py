@@ -6,10 +6,11 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/17 14:32:56 by taston            #+#    #+#              #
-#    Updated: 2023/04/19 16:25:17 by taston           ###   ########.fr        #
+#    Updated: 2023/04/20 14:03:07 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+import EdiHeadyTrack
 import cv2
 import numpy as np
 from time import sleep
@@ -162,10 +163,3 @@ def open_vid(vid_file):
         raise IOError("Cannot open chosen video")
 
     return cap, FPS
-
-# def run_vid(vid_file):
-     
-# def initialise():
-#     '''
-#     Initialise  
-#     '''
