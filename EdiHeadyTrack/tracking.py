@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/13 13:55:50 by taston            #+#    #+#              #
-#    Updated: 2023/03/25 09:48:50 by taston           ###   ########.fr        #
+#    Updated: 2023/04/24 11:17:48 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,9 @@ from EdiHeadyTrack.facedetector import FaceMeshDetector
 from tqdm import tqdm
 
 def track(vidfile, maxFaces, show=False):
-    print('#'*20)
+    print('-'*45)
     print('Tracking started')
-    print('#'*20)
+    print('-'*45)
     
     cap = cv2.VideoCapture(vidfile)
     # Set up progress bar
