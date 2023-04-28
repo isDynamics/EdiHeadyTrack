@@ -1,0 +1,26 @@
+digraph "packages" {
+rankdir=BT
+charset="utf-8"
+"EdiHeadyTrack" [color="black", label=<EdiHeadyTrack>, shape="box", style="solid"];
+"EdiHeadyTrack.archiving" [color="black", label=<EdiHeadyTrack.archiving>, shape="box", style="solid"];
+"EdiHeadyTrack.calibrating" [color="black", label=<EdiHeadyTrack.calibrating>, shape="box", style="solid"];
+"EdiHeadyTrack.comparing" [color="black", label=<EdiHeadyTrack.comparing>, shape="box", style="solid"];
+"EdiHeadyTrack.facedetector" [color="black", label=<EdiHeadyTrack.facedetector>, shape="box", style="solid"];
+"EdiHeadyTrack.filtering" [color="black", label=<EdiHeadyTrack.filtering>, shape="box", style="solid"];
+"EdiHeadyTrack.guiOld" [color="black", label=<EdiHeadyTrack.guiOld>, shape="box", style="solid"];
+"EdiHeadyTrack.logging" [color="black", label=<EdiHeadyTrack.logging>, shape="box", style="solid"];
+"EdiHeadyTrack.math_utils" [color="black", label=<EdiHeadyTrack.math_utils>, shape="box", style="solid"];
+"EdiHeadyTrack.plot_utils" [color="black", label=<EdiHeadyTrack.plot_utils>, shape="box", style="solid"];
+"EdiHeadyTrack.processing" [color="black", label=<EdiHeadyTrack.processing>, shape="box", style="solid"];
+"EdiHeadyTrack.tracking" [color="black", label=<EdiHeadyTrack.tracking>, shape="box", style="solid"];
+"EdiHeadyTrack" -> "EdiHeadyTrack.archiving" [arrowhead="open", arrowtail="none"];
+"EdiHeadyTrack" -> "EdiHeadyTrack.calibrating" [arrowhead="open", arrowtail="none"];
+"EdiHeadyTrack" -> "EdiHeadyTrack.comparing" [arrowhead="open", arrowtail="none"];
+"EdiHeadyTrack" -> "EdiHeadyTrack.filtering" [arrowhead="open", arrowtail="none"];
+"EdiHeadyTrack" -> "EdiHeadyTrack.logging" [arrowhead="open", arrowtail="none"];
+"EdiHeadyTrack" -> "EdiHeadyTrack.processing" [arrowhead="open", arrowtail="none"];
+"EdiHeadyTrack" -> "EdiHeadyTrack.tracking" [arrowhead="open", arrowtail="none"];
+"EdiHeadyTrack.logging" -> "EdiHeadyTrack.plot_utils" [arrowhead="open", arrowtail="none"];
+"EdiHeadyTrack.tracking" -> "EdiHeadyTrack.facedetector" [arrowhead="open", arrowtail="none"];
+"EdiHeadyTrack.tracking" -> "EdiHeadyTrack.math_utils" [arrowhead="open", arrowtail="none"];
+}

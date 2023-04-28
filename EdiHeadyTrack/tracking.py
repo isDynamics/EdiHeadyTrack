@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/13 13:55:50 by taston            #+#    #+#              #
-#    Updated: 2023/04/24 11:17:48 by taston           ###   ########.fr        #
+#    Updated: 2023/04/28 08:53:38 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,8 +14,9 @@ import time
 import numpy as np
 import cv2
 import EdiHeadyTrack.math_utils as math_utils
-from EdiHeadyTrack.facedetector import FaceMeshDetector
+# from EdiHeadyTrack.facedetector import FaceMeshDetector
 from tqdm import tqdm
+
 
 def track(vidfile, maxFaces, show=False):
     print('-'*45)
@@ -53,16 +54,7 @@ def track(vidfile, maxFaces, show=False):
 
             cv2.line(img, p1, p2, (255,0,0), 3)
             
-            if show == True:
-                
-                # Format frame
-                # cv2.putText(img, f'FPS: {int(fps)}', (20,70), cv2.FONT_HERSHEY_PLAIN, 3, (0,255,0), 3)
-                # if face['yaw']:
-                #     cv2.putText(img, f'yaw: {np.round(face["yaw"],2)}', (1000,70), cv2.FONT_HERSHEY_PLAIN, 3, (0,0,0), 3)
-                # if face['pitch']:
-                #     cv2.putText(img, f'pitch: {np.round(face["pitch"],2)}', (1000,120), cv2.FONT_HERSHEY_PLAIN, 3, (0,0,0), 3)
-                # if face['roll']:
-                #     cv2.putText(img, f'roll: {np.round(face["roll"],2)}', (1000,170), cv2.FONT_HERSHEY_PLAIN, 3, (0,0,0), 3)                
+            if show == True:            
                 
                 cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
                 cv2.resizeWindow("EdiHeadyTrack", 640, 360)

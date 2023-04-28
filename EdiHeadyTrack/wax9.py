@@ -1,21 +1,17 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    logging.py                                         :+:      :+:    :+:    #
+#    wax9.py                                            :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/02/15 14:16:46 by taston            #+#    #+#              #
-#    Updated: 2023/04/25 12:51:29 by taston           ###   ########.fr        #
+#    Created: 2023/04/26 16:03:41 by taston            #+#    #+#              #
+#    Updated: 2023/04/26 16:04:43 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-from multiprocessing import Process
-from .plot_utils import plot
+from .imukinematics import IMUKinematics
 
-def log(show=False):
-    if show == True:
-        p = Process(target=plot)
-        p.start()
-    else:
-        ...
+class Wax9(IMUKinematics):
+    def __init__(self):
+        super().__init__()

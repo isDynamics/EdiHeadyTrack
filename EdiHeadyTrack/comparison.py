@@ -1,21 +1,14 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    logging.py                                         :+:      :+:    :+:    #
+#    comparison.py                                      :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/02/15 14:16:46 by taston            #+#    #+#              #
-#    Updated: 2023/04/25 12:51:29 by taston           ###   ########.fr        #
+#    Created: 2023/04/27 10:19:54 by taston            #+#    #+#              #
+#    Updated: 2023/04/27 10:21:05 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-from multiprocessing import Process
-from .plot_utils import plot
+from .sensordata import SensorData
 
-def log(show=False):
-    if show == True:
-        p = Process(target=plot)
-        p.start()
-    else:
-        ...
