@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:53:20 by taston            #+#    #+#              #
-#    Updated: 2023/04/05 14:14:07 by taston           ###   ########.fr        #
+#    Updated: 2023/05/10 09:23:26 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -120,7 +120,6 @@ def compare(video_file, sensor_file, show=False):
         ax1.add_artist(ab)
     
     ax1.set_yticks([])
-
     handles, labels = ax2.get_legend_handles_labels()
     # fig.legend(handles, labels, loc='right')
     ax3.legend(handles, labels, bbox_to_anchor=(1.0, 0.85), loc=2)

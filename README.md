@@ -83,9 +83,12 @@ As BibTeX:
 
 
 ## To do
-- [ ] Write unit tests.
-- [ ] Upload to PyPI
-- [ ] Update setup section of README
+- [ ] Moving to OOP
+- [ ] Calculating kinematics
+- [ ] Implementing sensor data
+- [ ] Sensor data class
+- [ ] Plotting class
+- [ ] Terminal printing
 
 ## Getting Involved
 For any suggestions, please [create a new issue](https://github.com/isDynamics/EdiHeadyTrack/issues).

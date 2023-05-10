@@ -1,30 +1,43 @@
-from .calibrating import (
-    calibrate
+from .camera import(
+    Camera
 )
 
-from .logging import(
-    log
+from .video import(
+    Video
 )
 
-from .tracking import(
-    track
+from.calibration import (
+    Calibrator
 )
 
-from .filtering import(
-    filter
+from .facedetector import(
+    MediaPipe
 )
 
-from .processing import(
-    process
+from .imu import(
+    Wax9
 )
 
-from .comparing import(
-    compare
+from .filter import(
+    Filter
 )
 
-from .archiving import(
-    archive
+from .head import(
+    Head
 )
+
+from .filter import(
+    Filter
+)
+
+from .sensordata import(
+    SensorData
+)
+
+from .plot import(
+    Plot
+)
+
 
 from .resources import *
 
