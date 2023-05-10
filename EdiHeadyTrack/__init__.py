@@ -11,8 +11,11 @@ from.calibration import (
 )
 
 from .facedetector import(
-    FaceDetector,
     MediaPipe
+)
+
+from .imu import(
+    Wax9
 )
 
 from .filter import(
@@ -27,37 +30,14 @@ from .filter import(
     Filter
 )
 
-from .headkinematics import(
-    HeadKinematics
+from .sensordata import(
+    SensorData
 )
 
 from .plot import(
     Plot
 )
 
-from .logging import(
-    log
-)
-
-from .tracking import(
-    track
-)
-
-from .filtering import(
-    filter
-)
-
-from .processing import(
-    process
-)
-
-from .comparing import(
-    compare
-)
-
-from .archiving import(
-    archive
-)
 
 from .resources import *
 
