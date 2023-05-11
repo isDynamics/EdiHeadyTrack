@@ -15,9 +15,7 @@ The EdiHeadyTrack documentation
    :caption: Contents:
 
    Introduction <self>
-   installation
-   example
-   license
+   calibration
    Github repository <https://github.com/isDynamics/EdiHeadyTrack>
 
 
