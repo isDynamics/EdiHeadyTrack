@@ -39,6 +39,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
+    'sphinx_mdinclude',
 ]
 
 autosummary_generate = True
