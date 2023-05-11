@@ -6,8 +6,7 @@
 The EdiHeadyTrack documentation
 ====================================
 
-.. mdinclude:: ../README.md
-
+mdinclude:: ../README.md
 
 .. toctree::
    :maxdepth: 2
@@ -15,6 +14,7 @@ The EdiHeadyTrack documentation
    :caption: Contents:
 
    Introduction <self>
+   installation
    api/index
    Github repository <https://github.com/isDynamics/EdiHeadyTrack>
 

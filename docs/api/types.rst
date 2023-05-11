@@ -1,5 +1,7 @@
-.. automodule:: EdiHeadyTrack.head
-  :members:
+Data Types
+------------------------------------------
 
-.. automodule:: EdiHeadyTrack.imu
+There are two core datatypes in EdiHeadyTrack: `Head` and `IMU`.
+
+.. automodule:: EdiHeadyTrack.head
   :members:
