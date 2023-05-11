@@ -1,2 +1,2 @@
-.. automodule:: EdiHeadyTrack.head
+.. automodule:: head
   :members:
