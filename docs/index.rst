@@ -6,11 +6,7 @@
 EdiHeadyTrack documentation
 ====================================
 
-testing before readme
-
 .. mdinclude:: ../README.md
-
-Testing after 
 
 .. toctree::
    :maxdepth: 2
