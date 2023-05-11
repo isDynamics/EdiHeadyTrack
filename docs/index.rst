@@ -15,7 +15,7 @@ The EdiHeadyTrack documentation
    :caption: Contents:
 
    Introduction <self>
-   calibration
+   api/index
    Github repository <https://github.com/isDynamics/EdiHeadyTrack>
 
 
