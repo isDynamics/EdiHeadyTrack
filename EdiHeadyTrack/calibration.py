@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 10:20:08 by taston            #+#    #+#              #
-#    Updated: 2023/05/12 14:00:00 by taston           ###   ########.fr        #
+#    Updated: 2023/05/12 14:09:34 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -181,6 +181,8 @@ class Calibrator:
                                                                       self.checkerboard.twodpoints,
                                                                       self.gray_frame.shape[::-1], None, None)
         print(f'Number of frames used for calibration: {frame_number}')
+
+        return self
     
     def draw_corners(self, corners):
         '''

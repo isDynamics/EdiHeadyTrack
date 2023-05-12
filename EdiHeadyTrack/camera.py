@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:41:23 by taston            #+#    #+#              #
-#    Updated: 2023/05/12 13:55:47 by taston           ###   ########.fr        #
+#    Updated: 2023/05/12 14:12:59 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,3 +73,5 @@ class Camera:
         self.video = video
         self.calibrator = Calibrator(checkerboard, self.video)
         self.calibrated = True
+
+        return self
