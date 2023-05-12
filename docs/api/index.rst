@@ -5,5 +5,5 @@ API
 
 camera
 ------
-.. automodule:: camera
+.. automodule:: EdiHeadyTrack.camera
    :members:
