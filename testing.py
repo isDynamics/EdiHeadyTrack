@@ -11,4 +11,4 @@ head = EHT.Head(facedetector=mediapipe, id='MP').apply_filter(filter)
 
 wax9 = EHT.Wax9(filename='EdiHeadyTrack/resources/example_imu.csv', time_offset=-59.335, id='WAX-9')
 key_times = [0.9, 0.95, 1.0, 1.05, 1.1, 1.15, 1.2, 1.25]
-comparison_plot = EHT.Plot().plot_comparison('velocity', (0.85, 1.35), (-220, 220), key_times, filtered_head, wax9)
+comparison_plot = EHT.Plot().plot_comparison('velocity', (0.85, 1.35), (-220, 220), key_times, head, wax9)

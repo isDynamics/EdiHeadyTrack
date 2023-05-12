@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/26 11:14:49 by taston            #+#    #+#              #
-#    Updated: 2023/05/10 11:29:01 by taston           ###   ########.fr        #
+#    Updated: 2023/05/12 14:40:15 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,10 @@ class Head(SensorData):
         id : str, int, float, optional
             unique identifier for each Head object (defaults to count of existing heads)
         """
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        print('-'*120)
+        print('{:<100} {:>19}'.format(f'Creating Head object for {facedetector}:', timestamp))
+        print('-'*120)
         super().__init__()
         Head.counter += 1
         self.facedetector = facedetector
@@ -69,6 +73,10 @@ class Head(SensorData):
         
         self.calculate_pose()
         self.calculate_kinematics()
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        print('-'*120)
+        print('{:<100} {:>19}'.format(f'Head object complete!', timestamp))
+        print('-'*120)
 
     def apply_filter(self, filter=Filter()):
         """Applies filter to head pose data and updates pose 
@@ -82,7 +90,7 @@ class Head(SensorData):
         -------
         self
         """
-        print('Filtering data...')
+        # print('Filtering data...')
         self.filter = filter
         data = pd.DataFrame.from_dict(self.pose)
         properties = ['yaw', 'pitch', 'roll']
@@ -135,7 +143,7 @@ class Head(SensorData):
         """
         Calculates kinematic data from pose time history
         """
-        print('Calculating kinematic data from head pose...')
+        # print('Calculating kinematic data from head pose...')
 
         self.velocity['time'] = self.pose['time'][1:]
         self.acceleration['time'] = self.pose['time'][2:]
