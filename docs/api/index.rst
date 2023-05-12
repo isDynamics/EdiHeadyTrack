@@ -3,8 +3,7 @@ API
 
 .. currentmodule:: EdiHeadyTrack
 
-Camera
+camera
 ------
-
-.. autoclass:: Camera
+.. automodule:: camera
    :members:
