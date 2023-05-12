@@ -27,6 +27,8 @@ Made with [contrib.rocks](https://contrib.rocks).
 ## About
 EdiHeadyTrack is a Python package for measuring head kinematics using markerless head pose detection methods. The current implementation primarily uses the FaceMesh module of MediaPipe's Python API for facial landmark detection alongside OpenCV for handling simple computer vision tasks.
 
+Full documentation for EdiHeadyTrack can be found [here](https://ediheadytrack.readthedocs.io).
+
 
 ## Technologies
 Project is created with:
@@ -37,18 +39,10 @@ EdiHeadyTrack is available on PyPI! Install using:
 ```bash
 pip install EdiHeadyTrack
 ```
-
-Or install the latest development version directly from GitHub!
-```bash
-pip install git+https:\\github.com/isDynamics/EdiHeadyTrack
-```
-
-## Usage
-
+For further installation instructions, consult the [documentation](https://ediheadytrack.readthedocs.io/en/latest/installation.html).
 
 ## Example
-An example output from EdiHeadyTrack is shown below:
-
+An example output from EdiHeadyTrack is shown below. A full worked example detailing how this can be achieved is provided [here](https://ediheadytrack.readthedocs.io/en/latest/example.html). 
 ![Example image](https://raw.githubusercontent.com/isDynamics/EdiHeadyTrack/master/EdiHeadyTrack/resources/comparison.png)
 
 
@@ -82,19 +76,10 @@ As BibTeX:
 }
 ``` -->
 
-
-## To do
-- [ ] Moving to OOP
-- [ ] Calculating kinematics
-- [ ] Implementing sensor data
-- [ ] Sensor data class
-- [ ] Plotting class
-- [ ] Terminal printing
-
 ## Getting Involved
 For any suggestions, please [create a new issue](https://github.com/isDynamics/EdiHeadyTrack/issues).
 
-## Citations
+<!-- ## Citations -->
 <!-- 1. Teixeira-Dias, F. (1995). *Numerical simulation of tensile and shear tests in plane strain and plane stress* (Doctoral dissertation)
 2. Teixeira-Dias, F. and Menezes, L.F. (2001), *Numerical aspects of finite element simulations of residual stresses in metal matrix composites*. Int. J. Numer. Meth. Engng., 50: 629-644.
 
