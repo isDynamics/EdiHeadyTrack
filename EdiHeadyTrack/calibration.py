@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 10:20:08 by taston            #+#    #+#              #
-#    Updated: 2023/05/10 10:03:59 by taston           ###   ########.fr        #
+#    Updated: 2023/05/12 14:00:00 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -132,13 +132,13 @@ class Calibrator:
             Video used for camera calibration. If no video specified
             an empty video will be attempted.
         """
-        self.video = video
-        self.checkerboard = Checkerboard(checkerboard)
         timestamp = datetime.now().strftime("%H:%M:%S")
+        self.video = video
         print('-'*120)
         print('{:<100} {:>19}'.format(f'Creating Calibrator object for video {self.video.filename}:', timestamp))
         print('-'*120)
         print(self.video)
+        self.checkerboard = Checkerboard(checkerboard)
         print(f'Checkerboard dimensions: {self.checkerboard.dimensions[0]} x {self.checkerboard.dimensions[1]}')
         self.criteria = (cv2.TERM_CRITERIA_EPS + 
                          cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)

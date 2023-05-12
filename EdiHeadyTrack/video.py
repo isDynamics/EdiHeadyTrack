@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 10:00:46 by taston            #+#    #+#              #
-#    Updated: 2023/05/10 11:59:17 by taston           ###   ########.fr        #
+#    Updated: 2023/05/12 13:54:09 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,6 @@ class Video:
         Open specified video file and create capture object
         '''
         cap = cv2.VideoCapture(self.filename)
-        print(type(cap))
         return cap
     
     def create_writer(self):
@@ -70,8 +69,6 @@ class Video:
                             cv2.VideoWriter_fourcc(*'mp4v'),
                             self.fps,
                             (self.width, self.height))
-        
-        print(type(self.writer))
 
     def get_dim(self):
         '''
@@ -103,6 +100,7 @@ class Video:
                 f'Length of video: {self.total_frames} frames' + '\n' + 
                 f'Framerate: {self.fps} fps' + '\n' +
                 '-'*60)
+        # return 'Video'
     
     
 
