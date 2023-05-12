@@ -33,6 +33,7 @@ python:
 # Optionally declare the Python requirements required to build your docs
 python:
    install:
-   - requirements: requirements.txt, docs/requirements.txt
+   - requirements: requirements.txt
+   - requirements: docs/requirements.txt
 
 
