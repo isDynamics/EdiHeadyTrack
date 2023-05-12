@@ -15,7 +15,7 @@ EdiHeadyTrack documentation
 
    Introduction <self>
    installation
-   api/index
+   api
    Github repository <https://github.com/isDynamics/EdiHeadyTrack>
 
 
