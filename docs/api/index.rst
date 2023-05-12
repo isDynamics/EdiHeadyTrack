@@ -1,10 +1,10 @@
 API
-====================================
+===
 
-This page provides the API documentation of EdiHeadyTrack.
+.. currentmodule:: EdiHeadyTrack
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents
 
-   types
+------
+
+.. autoclass:: Camera
+   :members:
