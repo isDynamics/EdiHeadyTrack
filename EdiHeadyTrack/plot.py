@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/05/12 14:59:36 by taston           ###   ########.fr        #
+#    Updated: 2023/05/12 15:02:08 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -218,5 +218,5 @@ class Plot:
 
                     ax1.add_artist(ab)
         
-        plt.savefig('comparison.png')
+        plt.savefig('EdiHeadyTrack/resources/comparison.png', bbox_inches='tight')
         plt.show()
