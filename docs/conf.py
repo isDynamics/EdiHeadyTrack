@@ -51,6 +51,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
+    'nbsphinx',
     'sphinx_mdinclude',
 ]
 
