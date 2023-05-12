@@ -5,33 +5,32 @@ import mock
 
 sys.path.insert(0, os.path.abspath('..'))
 
+# # try to import the modules of the package and mock everything that is not found
+# while True:
+#     try:
+#         # here are the modules that should be imported for the documentation
+#         import EdiHeadyTrack
+#         import EdiHeadyTrack.calibration
+#         import EdiHeadyTrack.camera
+#         import EdiHeadyTrack.facedetector
+#         import EdiHeadyTrack.filter
+#         import EdiHeadyTrack.head
+#         import EdiHeadyTrack.imu
+#         import EdiHeadyTrack.plot
+#         import EdiHeadyTrack.sensordata
+#         import EdiHeadyTrack.video
 
-# try to import the modules of the package and mock everything that is not found
-while True:
-    try:
-        # here are the modules that should be imported for the documentation
-        import EdiHeadyTrack
-        import EdiHeadyTrack.calibration
-        import EdiHeadyTrack.camera
-        import EdiHeadyTrack.facedetector
-        import EdiHeadyTrack.filter
-        import EdiHeadyTrack.head
-        import EdiHeadyTrack.imu
-        import EdiHeadyTrack.plot
-        import EdiHeadyTrack.sensordata
-        import EdiHeadyTrack.video
-
-    # if an import error occurs
-    except ImportError as err:
-        # get the module name from the error message
-        name = str(err).split("'")[1]
-        print("Mock:", name)
-        # and mock it
-        sys.modules.update((mod_name, mock.MagicMock()) for mod_name in [name])
-        # then try again to import it
-        continue
-    else:
-        break
+#     # if an import error occurs
+#     except ImportError as err:
+#         # get the module name from the error message
+#         name = str(err).split("'")[1]
+#         print("Mock:", name)
+#         # and mock it
+#         sys.modules.update((mod_name, mock.MagicMock()) for mod_name in [name])
+#         # then try again to import it
+#         continue
+#     else:
+#         break
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
