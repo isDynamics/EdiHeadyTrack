@@ -8,7 +8,16 @@ while True:
     try:
         # here are the modules that should be imported for the documentation
         import EdiHeadyTrack
+        import EdiHeadyTrack.calibration
+        import EdiHeadyTrack.camera
+        import EdiHeadyTrack.facedetector
+        import EdiHeadyTrack.filter
         import EdiHeadyTrack.head
+        import EdiHeadyTrack.imu
+        import EdiHeadyTrack.plot
+        import EdiHeadyTrack.sensordata
+        import EdiHeadyTrack.video
+
     # if an import error occurs
     except ImportError as err:
         # get the module name from the error message
