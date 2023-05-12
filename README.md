@@ -49,7 +49,7 @@ pip install git+https:\\github.com/isDynamics/EdiHeadyTrack
 ## Example
 An example output from EdiHeadyTrack is shown below:
 
-![Example image](https://github.com/isDynamics/EdiHeadyTrack/blob/master/EdiHeadyTrack/resources/comparison.png)
+![Example image](https://raw.githubusercontent.com/isDynamics/EdiHeadyTrack/master/EdiHeadyTrack/resources/comparison.png)
 
 
 <!-- ## Change log
