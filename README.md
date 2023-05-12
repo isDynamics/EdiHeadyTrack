@@ -2,6 +2,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) 
 [![Build Status - GitHub](https://github.com/isDynamics/EdiHeadyTrack/workflows/pytesting/badge.svg)](https://github.com/isDynamics/EdiHeadyTrack/actions/workflows/pytesting.yml)
 [![codecov](https://codecov.io/gh/isDynamics/EdiHeadyTrack/branch/master/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/isDynamics/EdiHeadyTrack)
+[![Documentation Status](https://readthedocs.org/projects/ediheadytrack/badge/?version=latest)](https://ediheadytrack.readthedocs.io/en/latest/?badge=latest)
 # EdiHeadyTrack
 
 ## Contributors 
