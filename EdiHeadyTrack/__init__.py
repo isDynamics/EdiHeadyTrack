@@ -39,8 +39,6 @@ from .plot import(
 )
 
 
-from .resources import *
-
 __all__ = [
     "calibrate",
     "log",
