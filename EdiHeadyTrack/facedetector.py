@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/05/10 11:29:21 by taston           ###   ########.fr        #
+#    Updated: 2023/05/16 09:42:22 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -157,7 +157,7 @@ class MediaPipe(FaceDetector):
                 # current_frame = int(self.video.cap.get(1))
                 self.find_faces(img)
                 cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
-                cv2.resizeWindow("EdiHeadyTrack", 640, 360)
+                cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
                 cv2.imshow("EdiHeadyTrack", img)
                 # cv2.imwrite(f'tracking frames/{current_frame}.png', img)
                 
