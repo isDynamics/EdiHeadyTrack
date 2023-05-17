@@ -6,9 +6,6 @@ from .video import(
     Video
 )
 
-from .calibration import (
-    Calibrator
-)
 
 from .facedetector import(
     MediaPipe
@@ -22,15 +19,9 @@ from .filter import(
     Filter
 )
 
-from .head import(
-    Head
-)
-
-from .filter import(
-    Filter
-)
-
 from .sensordata import(
+    Head,
+    IMU,
     SensorData
 )
 

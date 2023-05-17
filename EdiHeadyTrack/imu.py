@@ -1,55 +1,5 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    imu.py                                             :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/04/26 16:03:23 by taston            #+#    #+#              #
-#    Updated: 2023/05/10 11:38:08 by taston           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-from .sensordata import SensorData
+from .sensordata import IMU
 import pandas as pd
-
-
-class IMU(SensorData):
-    """
-    A class used to represent an IMU
-
-    ...
-    
-    Attributes
-    ----------
-    filename : str
-        file containing IMU sensor data
-    id : int, float, str
-        unique identifier given to IMU
-    time_offset : float
-        time offset applied to IMU data to sync with head pose data
-    """
-    counter = 0
-    def __init__(self, filename=None, time_offset=0, id=counter):
-        """
-        Parameters
-        ----------
-        filename : str
-            file containing IMU sensor data
-        id : int, float, str
-            unique identifier given to IMU
-        time_offset : float
-            time offset applied to IMU data to sync with head pose data
-        """
-        super().__init__()
-        IMU.counter += 1
-        self.filename = filename
-        self.time_offset = time_offset
-        if id:
-            self.id = id
-        else:
-            self.id = IMU.counter
-
 
 class Wax9(IMU):
     """

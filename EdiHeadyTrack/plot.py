@@ -6,14 +6,13 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/05/16 09:43:03 by taston           ###   ########.fr        #
+#    Updated: 2023/05/16 12:02:18 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-from .head import Head
-from .imu import IMU
-from .sensordata import SensorData
+from .imu import Wax9
+from .sensordata import *
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import (TextArea, DrawingArea, OffsetImage,
                                   AnnotationBbox)
