@@ -12,3 +12,6 @@ def test_FaceDetector():
     assert type(facedetector.video) == Video
     assert facedetector.face2d
     assert facedetector.face3d == []
+
+def test_MediaPipe_ ():
+    ...
