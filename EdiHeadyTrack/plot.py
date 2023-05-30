@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/05/30 15:25:07 by taston           ###   ########.fr        #
+#    Updated: 2023/05/30 15:35:49 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -93,9 +93,9 @@ class Plot:
                         ax.axvline(x=time, color='green', ls=':')
                     
                     if isinstance(sensor, Head):
-                        plot = ax.plot(property_dict['time'], property_dict[key], label=f'{sensor.id}', color='c', ls='dashed')
+                        line, = ax.plot(property_dict['time'], property_dict[key], label=f'{sensor.id}', color='c', ls='dashed')
                     elif isinstance(sensor, IMU):
-                        plot = ax.plot(property_dict['time'], property_dict[key], label=f'{sensor.id}', color='k')
+                        line, = ax.plot(property_dict['time'], property_dict[key], label=f'{sensor.id}', color='k')
 
                     if idx + 2 != len(list(property_dict.keys())):
                         plt.setp(ax.get_xticklabels(), visible=False)
@@ -147,7 +147,7 @@ class Plot:
         if show == True:
             plt.show()
         
-        return plot
+        return line
 
 
     def summarise(self):
