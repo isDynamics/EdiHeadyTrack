@@ -54,3 +54,5 @@ class Wax9(IMU):
         self.acceleration['yaw'] = data['accelX']
         self.acceleration['pitch'] = data['accelY']
         self.acceleration['roll'] = data['accelZ']
+
+        return

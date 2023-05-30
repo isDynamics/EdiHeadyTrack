@@ -41,6 +41,7 @@ def test_Head_apply_filter():
     assert round(head.velocity['yaw'][0], 0) == 79
 
 def test_IMU():
+    IMU._counter = 0
     imu = IMU()
     assert imu.id == 1
     imu = IMU()
