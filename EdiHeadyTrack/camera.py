@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:41:23 by taston            #+#    #+#              #
-#    Updated: 2023/05/17 15:04:25 by taston           ###   ########.fr        #
+#    Updated: 2023/05/30 10:48:03 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,7 @@ class Camera:
         self.calibrated = False
 
     
-    def calibrate(self, checkerboard=(9,6), video=Video()):
+    def calibrate(self, checkerboard=(9,6), video=Video(), show=True):
         """Creates a calibrator object and calibrates the Camera.
 
         If arguments checkerboard and video aren't passed in, the
@@ -73,7 +73,7 @@ class Camera:
         """
         
         self.video = video
-        self.calibrator = Calibrator(checkerboard, self.video)
+        self.calibrator = Calibrator(checkerboard, self.video, show)
         self.calibrated = True
 
         return self
@@ -187,7 +187,7 @@ class Calibrator:
         Save camera parameters to csv files
     """
 
-    def __init__(self, checkerboard, video=Video()):
+    def __init__(self, checkerboard, video=Video(), show=True):
         """
         Parameters
         ----------
@@ -198,6 +198,7 @@ class Calibrator:
             an empty video will be attempted.
         """
         timestamp = datetime.now().strftime("%H:%M:%S")
+        self.show = show
         self.video = video
         print('-'*120)
         print('{:<100} {:>19}'.format(f'Creating Calibrator object for video {self.video.filename}:', timestamp))
@@ -231,7 +232,9 @@ class Calibrator:
             if ret:
                 complete, image = self.draw_corners(corners)
             if complete: break
-            cv2.imshow('Calibrating...', self.frame)
+
+            if self.show == True:
+                cv2.imshow('Calibrating...', self.frame)
             self.video.writer.write(self.frame)
             k = cv2.waitKey(1)
             if k == 27:
