@@ -1,11 +1,11 @@
 from EdiHeadyTrack.facedetector import FaceDetector, MediaPipe
 
-TEST_FILE = 'resources/testvid.mp4'
+TEST_FILE = 'test/resources/testvidshort.mp4'
 from EdiHeadyTrack import Video
 TEST_VIDEO = Video(TEST_FILE)
 from EdiHeadyTrack import Camera
 TEST_CAMERA = Camera()
-SHOW = True
+SHOW = False
 
 def test_FaceDetector():
     facedetector = FaceDetector(TEST_VIDEO, TEST_CAMERA, SHOW)

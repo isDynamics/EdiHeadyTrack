@@ -1,6 +1,6 @@
 from EdiHeadyTrack.video import Video
 
-TEST_FILE = 'test/resources/testvid.mp4'
+TEST_FILE = 'test/resources/testvidshort.mp4'
 TEST_VIDEO = Video(TEST_FILE)
 
 def test_open_vid():
@@ -20,7 +20,7 @@ def test_get_dim():
 
 def test_get_length():
     total_frames = TEST_VIDEO.get_length()
-    assert total_frames == 2281
+    assert total_frames == 76
 
 def test_get_fps():
     fps = TEST_VIDEO.get_fps()
