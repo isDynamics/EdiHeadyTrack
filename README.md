@@ -43,7 +43,7 @@ For further installation instructions, consult the [documentation](https://edihe
 
 ## Example
 An example output from EdiHeadyTrack is shown below. A full worked example detailing how this can be achieved is provided [here](https://ediheadytrack.readthedocs.io/en/latest/example.html). 
-![Example image](https://raw.githubusercontent.com/isDynamics/EdiHeadyTrack/master/EdiHeadyTrack/resources/comparison.png)
+![Example image](https://raw.githubusercontent.com/isDynamics/EdiHeadyTrack/master/resources/comparison.png)
 
 
 <!-- ## Change log
