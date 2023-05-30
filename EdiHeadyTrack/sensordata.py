@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:35:24 by taston            #+#    #+#              #
-#    Updated: 2023/05/30 10:34:43 by taston           ###   ########.fr        #
+#    Updated: 2023/05/30 14:03:14 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,8 +66,9 @@ class Head(SensorData):
     calculate_pose()
         computes HeadPose from detected facial landmarks
     """
-    counter = 0
-    def __init__(self, facedetector=FaceDetector(), id=counter):
+    _counter = 0
+    
+    def __init__(self, facedetector=FaceDetector(), id=_counter):
         """
         Parameters
         ----------
@@ -81,12 +82,12 @@ class Head(SensorData):
         print('{:<100} {:>19}'.format(f'Creating Head object for {facedetector}:', timestamp))
         print('-'*120)
         super().__init__()
-        Head.counter += 1
+        Head._counter += 1
         self.facedetector = facedetector
-        # if id:
-        self.id = id
-        # # else:
-        #     self.id = id
+        if id:
+            self.id = id
+        else:
+            self.id = Head._counter
         self.pose = {'time':    [],
                      'yaw':     [],
                      'pitch':   [],
@@ -165,6 +166,8 @@ class Head(SensorData):
                     p1 = (int(nose2d[0]), int(nose2d[1]))
                     p2 = (int(nose2d[0] - yaw * 2), int(nose2d[1] - pitch * 2))
 
+        return
+
     def calculate_kinematics(self):
         """
         Calculates kinematic data from pose time history
@@ -177,6 +180,8 @@ class Head(SensorData):
         for key in list(self.pose.keys())[1:]:
             self.velocity[key] = np.diff(np.array(self.pose[key])) / np.diff(np.array(self.pose['time']))
             self.acceleration[key] = np.diff(np.array(self.velocity[key])) / np.diff(np.array(self.velocity['time']))
+
+        return self
 
 
 class IMU(SensorData):
