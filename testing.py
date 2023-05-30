@@ -1,13 +1,13 @@
 import EdiHeadyTrack as eht
 
-calibration_video = eht.Video(filename='test/resources/testvid.mp4')
-width, height = calibration_video.get_dim()
-print('Height: ', height)
-print('Width: ', width)
+# calibration_video = eht.Video(filename='test/resources/testvid.mp4')
+# width, height = calibration_video.get_dim()
+# print('Height: ', height)
+# print('Width: ', width)
 # camera = eht.Camera().calibrate(checkerboard=(9,6), video=calibration_video)
 camera = eht.Camera()
 tracking_video = eht.Video(filename='test/resources/testvid.mp4')
-mediapipe = eht.MediaPipe(video=tracking_video, camera=camera)
+mediapipe = eht.MediaPipe(video=tracking_video, camera=camera, show=True)
 filter = eht.Filter().low_pass_butterworth(fs=4000, lowcut=160, order=4)
 head = eht.Head(facedetector=mediapipe, id='MP').apply_filter(filter)
 wax9 = eht.Wax9(filename='resources/example_imu.csv', time_offset=-59.335, id='WAX-9')

@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/05/17 16:20:09 by taston           ###   ########.fr        #
+#    Updated: 2023/05/30 11:35:46 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ class FaceDetector:
     face3d : list
         list of known 3d face points (from mesh model)
     """
-    def __init__(self, video=Video(), camera=Camera()):
+    def __init__(self, video=Video(), camera=Camera(), show=True):
         self.camera = camera
         self.video = video
         self.face2d = {'time': [],
@@ -43,6 +43,7 @@ class FaceDetector:
                        'key landmark positions':    [],
                        'all landmark positions':    []}
         self.face3d = []
+        self.show = show
 
 class MediaPipe(FaceDetector):
     """
@@ -85,7 +86,7 @@ class MediaPipe(FaceDetector):
     run()
         run through the tracking procedure using MediaPipe face mesh
     """
-    def __init__(self, video=Video(), camera=Camera(),
+    def __init__(self, video=Video(), camera=Camera(), show=True,
                  staticMode=False, maxFaces=1, refineLandmarks=False, minDetectionCon=0.5, minTrackCon=0.5):
         """
         Parameters
@@ -105,7 +106,7 @@ class MediaPipe(FaceDetector):
         minTrackCon : float, optional
             minimum tracking confidence (default 0.5)
         """
-        super().__init__(video, camera)
+        super().__init__(video, camera, show)
         timestamp = datetime.now().strftime("%H:%M:%S")
         print('-'*120)
         print('{:<100} {:>19}'.format(f'Creating MediaPipe object for video {self.video.filename}:', timestamp))
@@ -162,7 +163,8 @@ class MediaPipe(FaceDetector):
                 self.find_faces(img)
                 cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
                 cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
-                cv2.imshow("EdiHeadyTrack", img)
+                if self.show == True:
+                    cv2.imshow("EdiHeadyTrack", img)
                 # cv2.imwrite(f'tracking frames/{current_frame}.png', img)
                 # self.video.writer.write(img)
                 out.write(img)
