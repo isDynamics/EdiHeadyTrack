@@ -16,6 +16,4 @@ def test_FaceDetector():
 
 def test_MediaPipe():
     mediapipe = MediaPipe(TEST_VIDEO, TEST_CAMERA, SHOW)
-    mediapipe.run()
-    assert type(mediapipe) == MediaPipe
-    
+    assert mediapipe.face2d['key landmark positions'][0][0] == [726, 252]
