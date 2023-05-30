@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:35:24 by taston            #+#    #+#              #
-#    Updated: 2023/05/16 15:34:36 by taston           ###   ########.fr        #
+#    Updated: 2023/05/30 10:34:43 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,6 @@ from datetime import datetime
 import pandas as pd
 from .facedetector import FaceDetector
 from .filter import Filter
-
 
 class SensorData:
     """

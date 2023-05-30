@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/05/16 12:02:18 by taston           ###   ########.fr        #
+#    Updated: 2023/05/26 14:59:27 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,90 +37,17 @@ class Plot:
     plot_imu(property, time_range, *imus)
         plots IMU data only
     """
-    def __init__(self):
+    def __init__(self, *sensors):
         self.colors = []
-
-    def plot_head(self, property, *heads):
-        """Plots head pose estimation data only
-        
-        Parameters
-        ----------
-        property : str
-            specifies which property to be plotted (from ('pose', 'velocity', 'acceleration')
-        *heads : Head
-            head objects to be plotted
-        """
-        plt.rcParams.update({'font.size': 14})
-        fig = plt.figure('EdiHeadyTrack - Head Data Plotting') #,figsize=[7,7])    
-        
-        for head in heads:
-            if not isinstance(head, Head):
-                raise TypeError(f'Attempted to plot type {type(head)}. Only Head objects may be plotted here!')
-            
-            if hasattr(head, property):
-                property_dict = getattr(head, property)
-                for idx, key in enumerate(list(property_dict.keys())[1:]):
-                    ax = plt.subplot(len(list(property_dict.keys()))-1, 1, idx+1)
-                    ax.grid(color='0.95')
-                    if property == 'pose':
-                        ax.set_ylabel(r'$\theta$ (deg)')
-                    elif property == 'velocity':
-                        ax.set_ylabel(r'$\omega$ (deg/s)')
-                    elif property =='acceleration':
-                        ax.set_ylabel(r'$\alpha$ (deg/s$^2$)')
-
-                    ax.plot(property_dict['time'], property_dict[key], label=f'{head.id} {key}')
-                    ax.legend(loc='best')
-
-        plt.xlabel(r'Time (s)')
-        plt.tight_layout()
-
-        plt.show()
-
-    def plot_imu(self, property, time_range, *imus):
-        """Plots head pose estimation data only
-        
-        Parameters
-        ----------
-        property : str
-            specifies which property to be plotted (from ('pose', 'velocity', 'acceleration')
-        time_range : tuple, float
-            range of times to be plotted over (lower limit, upper limit)
-        *imus : IMU
-            IMU objects to be plotted
-        """
-        plt.rcParams.update({'font.size': 14})
-        fig = plt.figure('EdiHeadyTrack - Head Data Plotting',figsize=[7,7])    
-
-        for imu in imus:
-            if not isinstance(imu, IMU):
-                raise TypeError(f'Attempted to plot type {type(imu)}. Only IMU objects may be plotted here!')
-
-            if hasattr(imu, property):
-                property_dict = getattr(imu, property)
-                for idx, key in enumerate(list(property_dict.keys())[1:]):
-                    ax = plt.subplot(len(list(property_dict.keys()))-1, 1, idx+1)
-                    ax.grid(color='0.95')
-                    if property == 'pose':
-                        ax.set_ylabel(r'$\theta$ (deg)')
-                    elif property == 'velocity':
-                        ax.set_ylabel(r'$\omega$ (deg/s)')
-                    elif property =='acceleration':
-                        ax.set_ylabel(r'$\alpha$ (deg/s$^2$)')
-
-                    if time_range:
-                        ax.set_xlim(time_range)
-
-                    ax.plot(property_dict['time'], property_dict[key], label=f'{imu.id} {key}')
-                    ax.legend(loc='best')
-
-        plt.xlabel(r'Time (s)')
-        plt.tight_layout()
-
-        plt.show()
+        self.sensors = []
+        for sensor in sensors:
+            if not isinstance(sensor, SensorData):
+                raise TypeError(f'Attempted to plot type {type(sensor)}. Only SensorData objects may be plotted here!')
+            else:
+                self.sensors.append(sensor)
 
 
-    def plot_comparison(self, property, xlim, ylim, key_times=[], *sensors):
+    def plot_property(self, property, xlim, ylim, key_times=[]):
         """Plots comparison between sensor data
         
         Parameters
@@ -139,15 +66,14 @@ class Plot:
         plt.rcParams.update({'font.size': 14})
         fig = plt.figure('EdiHeadyTrack - Head Data Plotting',figsize=[6,8])    
 
-        key_frames = [int(240*time) for time in key_times]
+        if key_times:
+            key_frames = [int(240*time) for time in key_times]
 
-        for sensor in sensors:
-            if not isinstance(sensor, SensorData):
-                raise TypeError(f'Attempted to plot type {type(sensor)}. Only SensorData objects may be plotted here!')
-
+        for sensor in self.sensors:
             if hasattr(sensor, property):
                 property_dict = getattr(sensor, property)
                 for idx, key in enumerate(list(property_dict.keys())[1:]):
+                    
                     ax = plt.subplot(len(list(property_dict.keys())), 1, idx+2)
                     ax.grid(color='0.95')
                     if property == 'pose':
@@ -170,9 +96,6 @@ class Plot:
                     elif isinstance(sensor, IMU):
                         ax.plot(property_dict['time'], property_dict[key], label=f'{sensor.id}', color='k')
 
-                    # ax.set_ylim(min(property_dict[key] - abs(min(property_dict[key])/10)) , max(property_dict[key] + abs(max(property_dict[key])/10)))
-                    ax.set_ylim(-220, 220)
-
                     if idx + 2 != len(list(property_dict.keys())):
                         plt.setp(ax.get_xticklabels(), visible=False)
                     else:
@@ -188,34 +111,41 @@ class Plot:
         plt.setp(ax1.get_xticklabels(), visible=False)
         plt.setp(ax1.get_yticklabels(), visible=False)
 
-        for sensor in sensors:
-            if isinstance(sensor, Head):
-                for idx, frame in enumerate(key_frames):
-                    img = sensor.facedetector.tracking_frames[frame]
+        if key_times:
+            for sensor in self.sensors:
+                if isinstance(sensor, Head):
+                    for idx, frame in enumerate(key_frames):
+                        img = sensor.facedetector.tracking_frames[frame]
 
-                    frame_index = sensor.facedetector.face2d['frame'].index(frame)
-                    x_list = [pos[0] for pos in sensor.facedetector.face2d['all landmark positions'][frame_index]]
-                    y_list = [pos[1] for pos in sensor.facedetector.face2d['all landmark positions'][frame_index]]
-                    
-                    top_bound = max(0, min(y_list[:]) - 200)
-                    bottom_bound = min(sensor.facedetector.video.height, max(y_list[:]) + 200)
-                    left_bound = max(0, min(x_list[:]) - 200)
-                    right_bound = min(sensor.facedetector.video.width, max(x_list[:]) + 200)
-                    
-                    img = img[top_bound:bottom_bound, left_bound:right_bound, :]
+                        frame_index = sensor.facedetector.face2d['frame'].index(frame)
+                        x_list = [pos[0] for pos in sensor.facedetector.face2d['all landmark positions'][frame_index]]
+                        y_list = [pos[1] for pos in sensor.facedetector.face2d['all landmark positions'][frame_index]]
+                        
+                        top_bound = max(0, min(y_list[:]) - 200)
+                        bottom_bound = min(sensor.facedetector.video.height, max(y_list[:]) + 200)
+                        left_bound = max(0, min(x_list[:]) - 200)
+                        right_bound = min(sensor.facedetector.video.width, max(x_list[:]) + 200)
+                        
+                        img = img[top_bound:bottom_bound, left_bound:right_bound, :]
 
-                    imagebox = OffsetImage(img, zoom=0.08)
-                    imagebox.image.axes = ax1
+                        imagebox = OffsetImage(img, zoom=0.08)
+                        imagebox.image.axes = ax1
 
-                    ab = AnnotationBbox(imagebox, [key_times[idx],0.5],
-                                        xybox=(1, 1),
-                                        xycoords='data',
-                                        boxcoords="offset points",
-                                        pad=0.01,
-                                        bboxprops =dict(edgecolor='white')
-                                        )
+                        ab = AnnotationBbox(imagebox, [key_times[idx],0.5],
+                                            xybox=(1, 1),
+                                            xycoords='data',
+                                            boxcoords="offset points",
+                                            pad=0.01,
+                                            bboxprops =dict(edgecolor='white')
+                                            )
 
-                    ax1.add_artist(ab)
+                        ax1.add_artist(ab)
         
         # plt.savefig('resources/comparison.png', bbox_inches='tight')
         plt.show()
+
+    def summarise(self):
+        # TODO: Add data sets to plot class as attributes
+        # TODO: Add output table summary, similar to format used before in comparing.py
+
+        ... 

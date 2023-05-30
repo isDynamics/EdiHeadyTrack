@@ -44,7 +44,13 @@ class Wax9(IMU):
         data.columns = self.columns
         data['adjusted time'] = data['sample time'] - data['sample time'][0] + self.time_offset
 
+        # Velocity
         self.velocity['time'] = data['adjusted time']
         self.velocity['yaw'] = data['gyroX']
         self.velocity['pitch'] = data['gyroY']
         self.velocity['roll'] = data['gyroZ']
+        # Acceleration
+        self.acceleration['time'] = data['adjusted time']
+        self.acceleration['yaw'] = data['accelX']
+        self.acceleration['pitch'] = data['accelY']
+        self.acceleration['roll'] = data['accelZ']

@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:41:23 by taston            #+#    #+#              #
-#    Updated: 2023/05/16 12:01:03 by taston           ###   ########.fr        #
+#    Updated: 2023/05/17 15:04:25 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ class Camera:
         ----------
         ...
         """
-
+        
         width = 1920
         height = 1080
         self.focal_length = height * 1.28
@@ -57,6 +57,7 @@ class Camera:
         self.distortion_matrix = np.zeros((4, 1), dtype=np.float64)
         self.calibrated = False
 
+    
     def calibrate(self, checkerboard=(9,6), video=Video()):
         """Creates a calibrator object and calibrates the Camera.
 

@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 10:00:46 by taston            #+#    #+#              #
-#    Updated: 2023/05/12 14:26:00 by taston           ###   ########.fr        #
+#    Updated: 2023/05/30 10:09:03 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,7 +69,7 @@ class Video:
                             cv2.VideoWriter_fourcc(*'mp4v'),
                             self.fps,
                             (self.width, self.height))
-
+ 
     def get_dim(self):
         '''
         Get video resolution
