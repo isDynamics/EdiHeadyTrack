@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:35:24 by taston            #+#    #+#              #
-#    Updated: 2023/05/30 14:03:14 by taston           ###   ########.fr        #
+#    Updated: 2023/05/30 14:13:46 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -199,8 +199,8 @@ class IMU(SensorData):
     time_offset : float
         time offset applied to IMU data to sync with head pose data
     """
-    counter = 0
-    def __init__(self, filename=None, time_offset=0, id=counter):
+    _counter = 0
+    def __init__(self, filename=None, time_offset=0, id=_counter):
         """
         Parameters
         ----------
@@ -212,10 +212,10 @@ class IMU(SensorData):
             time offset applied to IMU data to sync with head pose data
         """
         super().__init__()
-        IMU.counter += 1
+        IMU._counter += 1
         self.filename = filename
         self.time_offset = time_offset
         if id:
             self.id = id
         else:
-            self.id = IMU.counter
+            self.id = IMU._counter
