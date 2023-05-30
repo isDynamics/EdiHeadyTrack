@@ -14,7 +14,8 @@ def test_FaceDetector():
     assert facedetector.face2d
     assert facedetector.face3d == []
 
-def test_MediaPipe_():
+def test_MediaPipe():
     mediapipe = MediaPipe(TEST_VIDEO, TEST_CAMERA, SHOW)
+    mediapipe.run()
     assert type(mediapipe) == MediaPipe
-    # assert 
+    

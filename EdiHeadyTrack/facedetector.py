@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/05/30 11:35:46 by taston           ###   ########.fr        #
+#    Updated: 2023/05/30 11:40:39 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -183,6 +183,8 @@ class MediaPipe(FaceDetector):
                 print('Face tracking complete...')
                 break
 
+        return
+
     def find_faces(self, img):
         """Finds faces in a supplied image
 
@@ -228,6 +230,7 @@ class MediaPipe(FaceDetector):
                 self.face2d['key landmark positions'].append(key_landmark_positions)
 
         self.tracking_frames.append(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        
         return
     
     def __str__(self):
