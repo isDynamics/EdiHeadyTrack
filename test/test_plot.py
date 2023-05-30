@@ -24,6 +24,8 @@ def test_plot_property():
                                                show=False) 
     wax9 = Wax9('resources/example_imu.csv', time_offset=-59.335, id='WAX-9')
     line = Plot(HEAD, wax9).plot_property(show=False)
+    line = Plot(HEAD).plot_property(property='pose',show=False)
+    line = Plot(HEAD).plot_property(property='acceleration',show=False)
     line = Plot(wax9).plot_property(show=False)
     x_plot, y_plot = line.get_xydata().T
 
