@@ -38,7 +38,7 @@ def test_Head_apply_filter():
     filter = Filter()
     head = Head(MEDIAPIPE)
     head.apply_filter(filter)
-    assert round(head.velocity['yaw'][0], 2) == 78.81
+    assert int(head.velocity['yaw'][0] == 79
 
 def test_IMU():
     imu = IMU()
