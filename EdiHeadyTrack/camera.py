@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:41:23 by taston            #+#    #+#              #
-#    Updated: 2023/05/30 10:48:03 by taston           ###   ########.fr        #
+#    Updated: 2023/05/30 11:10:40 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -296,5 +296,5 @@ class Calibrator:
         timestamp = datetime.now().strftime("%H:%M:%S")
         print('Saving outputs...')
         from numpy import savetxt
-        savetxt('EdiHeadyTrack/resources/camera_matrix.csv', self.matrix, delimiter=',')
-        savetxt('EdiHeadyTrack/resources/camera_distortion.csv', self.distortion, delimiter=',')
+        savetxt('camera_matrix.csv', self.matrix, delimiter=',')
+        savetxt('camera_distortion.csv', self.distortion, delimiter=',')
