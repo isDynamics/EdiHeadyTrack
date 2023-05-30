@@ -13,7 +13,7 @@ TEST_CAMERA = Camera()
 SHOW = False
 from EdiHeadyTrack.facedetector import MediaPipe
 MEDIAPIPE = MediaPipe(TEST_VIDEO, TEST_CAMERA, SHOW)
-
+Head._counter=0
 
 def test_Head_counter():
     head = Head(MEDIAPIPE)

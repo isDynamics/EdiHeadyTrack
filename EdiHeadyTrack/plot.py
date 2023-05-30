@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/05/26 14:59:27 by taston           ###   ########.fr        #
+#    Updated: 2023/05/30 15:25:07 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,8 @@ class Plot:
                 self.sensors.append(sensor)
 
 
-    def plot_property(self, property, xlim, ylim, key_times=[]):
+    def plot_property(self, property='velocity', 
+                      xlim=None, ylim=None, key_times=[], show=True):
         """Plots comparison between sensor data
         
         Parameters
@@ -92,9 +93,9 @@ class Plot:
                         ax.axvline(x=time, color='green', ls=':')
                     
                     if isinstance(sensor, Head):
-                        ax.plot(property_dict['time'], property_dict[key], label=f'{sensor.id}', color='c', ls='dashed')
+                        plot = ax.plot(property_dict['time'], property_dict[key], label=f'{sensor.id}', color='c', ls='dashed')
                     elif isinstance(sensor, IMU):
-                        ax.plot(property_dict['time'], property_dict[key], label=f'{sensor.id}', color='k')
+                        plot = ax.plot(property_dict['time'], property_dict[key], label=f'{sensor.id}', color='k')
 
                     if idx + 2 != len(list(property_dict.keys())):
                         plt.setp(ax.get_xticklabels(), visible=False)
@@ -142,7 +143,12 @@ class Plot:
                         ax1.add_artist(ab)
         
         # plt.savefig('resources/comparison.png', bbox_inches='tight')
-        plt.show()
+        
+        if show == True:
+            plt.show()
+        
+        return plot
+
 
     def summarise(self):
         # TODO: Add data sets to plot class as attributes
