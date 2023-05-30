@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:41:23 by taston            #+#    #+#              #
-#    Updated: 2023/05/30 11:10:40 by taston           ###   ########.fr        #
+#    Updated: 2023/05/30 11:19:05 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -298,3 +298,5 @@ class Calibrator:
         from numpy import savetxt
         savetxt('camera_matrix.csv', self.matrix, delimiter=',')
         savetxt('camera_distortion.csv', self.distortion, delimiter=',')
+
+        return
