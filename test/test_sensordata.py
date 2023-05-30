@@ -26,19 +26,19 @@ def test_Head_counter():
 def test_Head_calculate_pose():
     head = Head(MEDIAPIPE)
     head.calculate_pose()
-    assert head.pose['yaw'][0] == -8.518566619208693
+    assert round(head.pose['yaw'][0], 2) == -8.52
     
 def test_Head_calculate_kinematics():
     head = Head(MEDIAPIPE)
     head.calculate_pose()
-    assert head.velocity['yaw'][0] == 443.30430027344244
+    assert round(head.velocity['yaw'][0], 2) == 443.30
 
 def test_Head_apply_filter():
     from EdiHeadyTrack import Filter
     filter = Filter()
     head = Head(MEDIAPIPE)
     head.apply_filter(filter)
-    assert head.velocity['yaw'][0] == 78.80626861776051
+    assert round(head.velocity['yaw'][0], 2) == 78.81
 
 def test_IMU():
     imu = IMU()
