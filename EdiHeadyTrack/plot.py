@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/05/31 12:12:31 by taston           ###   ########.fr        #
+#    Updated: 2023/05/31 12:15:11 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -92,13 +92,14 @@ class Plot:
                     if isinstance(sensor, Head):
                         x_data = property_dict['time']
                         y_data = property_dict[key]
-                        for lim in xlim:
-                            for idx, time in enumerate(x_data):
-                                if time > lim:
-                                    lims.append(idx)
-                                    break
-                        x_data = x_data[lims[0]:lims[1]]
-                        y_data = y_data[lims[0]:lims[1]]
+                        if xlim:
+                            for lim in xlim:
+                                for idx, time in enumerate(x_data):
+                                    if time > lim:
+                                        lims.append(idx)
+                                        break
+                            x_data = x_data[lims[0]:lims[1]]
+                            y_data = y_data[lims[0]:lims[1]]
                         line, = ax.plot(x_data, 
                                         y_data, 
                                         label=f'{sensor.id}', 
@@ -112,13 +113,14 @@ class Plot:
                     elif isinstance(sensor, IMU):
                         x_data = property_dict['time']
                         y_data = property_dict[key]
-                        for lim in xlim:
-                            for idx, time in enumerate(x_data):
-                                if time > lim:
-                                    lims.append(idx)
-                                    break
-                        x_data = x_data[lims[0]:lims[1]]
-                        y_data = y_data[lims[0]:lims[1]]
+                        if xlim:
+                            for lim in xlim:
+                                for idx, time in enumerate(x_data):
+                                    if time > lim:
+                                        lims.append(idx)
+                                        break
+                            x_data = x_data[lims[0]:lims[1]]
+                            y_data = y_data[lims[0]:lims[1]]
                         line, = ax.plot(x_data, 
                                         y_data, 
                                         label=f'{sensor.id}', 
