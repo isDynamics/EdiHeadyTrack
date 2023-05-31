@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/05/30 15:35:49 by taston           ###   ########.fr        #
+#    Updated: 2023/05/31 12:12:31 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,6 +40,7 @@ class Plot:
     def __init__(self, *sensors):
         self.colors = []
         self.sensors = []
+        self.lines = []
         for sensor in sensors:
             if not isinstance(sensor, SensorData):
                 raise TypeError(f'Attempted to plot type {type(sensor)}. Only SensorData objects may be plotted here!')
@@ -67,8 +68,8 @@ class Plot:
         plt.rcParams.update({'font.size': 14})
         fig = plt.figure('EdiHeadyTrack - Head Data Plotting',figsize=[6,8])    
 
-        if key_times:
-            key_frames = [int(240*time) for time in key_times]
+        # if key_times:
+        #     key_frames = [int(240*time) for time in key_times]
 
         for sensor in self.sensors:
             if hasattr(sensor, property):
@@ -86,17 +87,49 @@ class Plot:
 
                     if xlim:
                         ax.set_xlim(xlim)
-                    if ylim:
-                        ax.set_ylim(ylim)
 
+                    lims = []
+                    if isinstance(sensor, Head):
+                        x_data = property_dict['time']
+                        y_data = property_dict[key]
+                        for lim in xlim:
+                            for idx, time in enumerate(x_data):
+                                if time > lim:
+                                    lims.append(idx)
+                                    break
+                        x_data = x_data[lims[0]:lims[1]]
+                        y_data = y_data[lims[0]:lims[1]]
+                        line, = ax.plot(x_data, 
+                                        y_data, 
+                                        label=f'{sensor.id}', 
+                                        color='c', ls='dashed')
+                        self.lines.append({'sensor':    sensor.id,
+                                           'property':  f'{key}, {property}',
+                                           'values':    y_data})
+                        if key_times:
+                            key_frames = [int(sensor.facedetector.video.fps*time) for time in key_times]
+                            
+                    elif isinstance(sensor, IMU):
+                        x_data = property_dict['time']
+                        y_data = property_dict[key]
+                        for lim in xlim:
+                            for idx, time in enumerate(x_data):
+                                if time > lim:
+                                    lims.append(idx)
+                                    break
+                        x_data = x_data[lims[0]:lims[1]]
+                        y_data = y_data[lims[0]:lims[1]]
+                        line, = ax.plot(x_data, 
+                                        y_data, 
+                                        label=f'{sensor.id}', 
+                                        color='k')
+                        self.lines.append({'sensor':    sensor.id,
+                                           'property':  f'{key}, {property}',
+                                           'values':    y_data})
+            
                     for time in key_times:
                         ax.axvline(x=time, color='green', ls=':')
-                    
-                    if isinstance(sensor, Head):
-                        line, = ax.plot(property_dict['time'], property_dict[key], label=f'{sensor.id}', color='c', ls='dashed')
-                    elif isinstance(sensor, IMU):
-                        line, = ax.plot(property_dict['time'], property_dict[key], label=f'{sensor.id}', color='k')
-
+                        
                     if idx + 2 != len(list(property_dict.keys())):
                         plt.setp(ax.get_xticklabels(), visible=False)
                     else:
@@ -143,15 +176,30 @@ class Plot:
                         ax1.add_artist(ab)
         
         # plt.savefig('resources/comparison.png', bbox_inches='tight')
-        
         if show == True:
             plt.show()
         
-        return line
-
+        return self
 
     def summarise(self):
-        # TODO: Add data sets to plot class as attributes
-        # TODO: Add output table summary, similar to format used before in comparing.py
+        '''
+        Produces a summary of the maximum values of each line in a 
+        Plot object.
+        '''
+        sensor_prev = None
+        for line in self.lines:
+            sensor = line['sensor']
 
-        ... 
+            if sensor != sensor_prev:
+                print('-'*46)
+                print(f'{sensor} plot summary')
+                print('-'*46)
+                print('{:<30} {:>15}'.format(line['property'], 
+                                             round(max(abs(line['values'])), 2)))
+            else:
+                print('{:<30} {:>15}'.format(line['property'], 
+                                             round(max(abs(line['values'])), 2)))
+            
+            sensor_prev = sensor
+        
+        print('-'*46)
