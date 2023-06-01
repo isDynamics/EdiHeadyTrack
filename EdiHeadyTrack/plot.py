@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/05/31 12:15:11 by taston           ###   ########.fr        #
+#    Updated: 2023/06/01 13:47:57 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,15 +27,15 @@ class Plot:
     ----------
     colors : list
         list of colors used in plots
+    sensors : list, SensorData
+        list of SensorData objects to be plotted
+    lines : list, dict 
+        list of dicts containing data of each line being plotted 
 
     Methods
     -------
-    plot_comparison(property, xlim, ylim, key_times, *sensors)
+    plot_propertyplot_property(self, property='velocity', xlim=None, ylim=None, key_times=[], show=True):
         plots a time comparison between sensor data
-    plot_head(property, *heads)
-        plots head pose estimation data only
-    plot_imu(property, time_range, *imus)
-        plots IMU data only
     """
     def __init__(self, *sensors):
         self.colors = []
@@ -88,6 +88,8 @@ class Plot:
                     if xlim:
                         ax.set_xlim(xlim)
 
+                    # TODO: improve method of using different colors.
+                    #       Maybe use 
                     lims = []
                     if isinstance(sensor, Head):
                         x_data = property_dict['time']
@@ -104,6 +106,7 @@ class Plot:
                                         y_data, 
                                         label=f'{sensor.id}', 
                                         color='c', ls='dashed')
+        
                         self.lines.append({'sensor':    sensor.id,
                                            'property':  f'{key}, {property}',
                                            'values':    y_data})
