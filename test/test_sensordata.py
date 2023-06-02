@@ -11,7 +11,7 @@ TEST_VIDEO = Video(TEST_FILE)
 from EdiHeadyTrack import Camera
 TEST_CAMERA = Camera()
 SHOW = False
-from EdiHeadyTrack.facedetector import MediaPipe
+from EdiHeadyTrack.posedetector import MediaPipe
 MEDIAPIPE = MediaPipe(TEST_VIDEO, TEST_CAMERA, SHOW)
 Head._counter=0
 

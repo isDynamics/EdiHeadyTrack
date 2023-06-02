@@ -7,7 +7,7 @@ from .video import(
 )
 
 
-from .facedetector import(
+from .posedetector import(
     MediaPipe
 )
 

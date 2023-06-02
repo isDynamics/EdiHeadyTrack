@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/05/30 12:15:07 by taston           ###   ########.fr        #
+#    Updated: 2023/06/02 12:54:01 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,16 +20,16 @@ from .camera import Camera
 from .video import Video
 from .filter import Filter
 
-class FaceDetector:
+class PoseDetector:
     """
-    A class for representing a FaceDetector
+    A class for representing a PoseDetector
     
     ...
     
     Attributes
     ----------
     camera : Camera, optional
-        Camera object to be used with FaceDetector
+        Camera object to be used with PoseDetector
     face2d : dict
         dict of detected face points in 2d
     face3d : list
@@ -38,16 +38,11 @@ class FaceDetector:
     def __init__(self, video=Video(), camera=Camera(), show=True):
         self.camera = camera
         self.video = video
-        self.face2d = {'time': [],
-                       'frame': [],
-                       'key landmark positions':    [],
-                       'all landmark positions':    []}
-        self.face3d = []
         self.show = show
 
-class MediaPipe(FaceDetector):
+class MediaPipe(PoseDetector):
     """
-    A class for representing a MediaPipe FaceDetector
+    A class for representing a MediaPipe PoseDetector
 
     ...
     
@@ -78,6 +73,10 @@ class MediaPipe(FaceDetector):
         or non static video file
     tracking_frames : list
         list of frame numbers which have successfully been tracked
+    face2d : dict
+        dict of detected face points in 2d
+    face3d : list
+        list of known 3d face points (from mesh model)
         
     Methods
     -------
@@ -126,6 +125,11 @@ class MediaPipe(FaceDetector):
                                                  self.minTrackCon)
         self.drawSpec = self.mpDraw.DrawingSpec(thickness=1, circle_radius=2)
         self.key_landmarks = [33, 263, 1, 61, 291, 199]
+        self.face2d = {'time': [],
+                       'frame': [],
+                       'key landmark positions':    [],
+                       'all landmark positions':    []}
+        self.face3d = []
         self.run()
         timestamp = datetime.now().strftime("%H:%M:%S")
         print('-'*120)
@@ -235,3 +239,20 @@ class MediaPipe(FaceDetector):
     
     def __str__(self):
         return f'MediaPipe Face Detector with video {self.video.filename}'
+    
+
+
+class TDDFA_V2(PoseDetector):
+    """
+    A class for representing a 3DDFA_V2 PoseDetector
+
+    ...
+    
+    Attributes
+    ----------
+    
+        
+    Methods
+    -------
+    
+    """

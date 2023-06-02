@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:35:24 by taston            #+#    #+#              #
-#    Updated: 2023/05/30 14:13:46 by taston           ###   ########.fr        #
+#    Updated: 2023/06/02 12:57:28 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ import cv2
 import numpy as np
 from datetime import datetime
 import pandas as pd
-from .facedetector import FaceDetector
+from .posedetector import PoseDetector
 from .filter import Filter
 
 class SensorData:
@@ -48,8 +48,8 @@ class Head(SensorData):
     
     Attributes
     ----------
-    facedetector : FaceDetector
-        the FaceDetector object used to find the Head
+    facedetector : PoseDetector
+        the PoseDetector object used to find the Head
     filter : Filter
         Filter object used for data filtering
     id : str, int, float
@@ -68,12 +68,12 @@ class Head(SensorData):
     """
     _counter = 0
     
-    def __init__(self, facedetector=FaceDetector(), id=_counter):
+    def __init__(self, facedetector=PoseDetector(), id=_counter):
         """
         Parameters
         ----------
-        facedetector : FaceDetector, optional
-            the FaceDetector object used to find the Head (default FaceDetector())
+        facedetector : PoseDetector, optional
+            the PoseDetector object used to find the Head (default PoseDetector())
         id : str, int, float, optional
             unique identifier for each Head object (defaults to count of existing heads)
         """
