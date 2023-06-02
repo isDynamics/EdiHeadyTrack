@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    facedetector.py                                    :+:      :+:    :+:    #
+#    posedetector.py                                    :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/06/02 12:54:01 by taston           ###   ########.fr        #
+#    Updated: 2023/06/02 13:07:03 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -130,7 +130,12 @@ class MediaPipe(PoseDetector):
                        'key landmark positions':    [],
                        'all landmark positions':    []}
         self.face3d = []
+        self.pose = {'time':    [],
+                     'yaw':     [],
+                     'pitch':   [],
+                     'roll':    []}
         self.run()
+        self.calculate_pose()
         timestamp = datetime.now().strftime("%H:%M:%S")
         print('-'*120)
         print('{:<100} {:>19}'.format(f'MediaPipe object complete!', timestamp))
@@ -235,6 +240,49 @@ class MediaPipe(PoseDetector):
 
         self.tracking_frames.append(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         
+        return
+    
+    def calculate_pose(self):
+        """Calculates head pose from detected facial landmarks using 
+        Perspective-n-Point (PnP) pose computation:
+        
+        https://docs.opencv.org/4.6.0/d5/d1f/calib3d_solvePnP.html
+        """
+        print('Computing head pose from tracking data...')
+        for idx, time in enumerate(self.face2d['time']):
+            self.pose['time'].append(time)
+            face2d = self.face2d['key landmark positions'][idx]
+            face2d = np.array(face2d, dtype=np.float64)
+            face3d = np.array(self.face3d, dtype=np.float64)
+
+            success, rot_vec, trans_vec = cv2.solvePnP(face3d,
+                                                       face2d,
+                                                       self.camera.internal_matrix,
+                                                       self.camera.distortion_matrix,
+                                                       flags=cv2.SOLVEPNP_ITERATIVE)
+            
+            rmat = cv2.Rodrigues(rot_vec)[0]
+
+            P = np.hstack((rmat, np.zeros((3, 1), dtype=np.float64)))
+            eulerAngles =  cv2.decomposeProjectionMatrix(P)[6]
+            yaw = eulerAngles[1, 0]
+            pitch = eulerAngles[0, 0]
+            roll = eulerAngles[2,0]
+            
+            if pitch < 0:
+                pitch = - 180 - pitch
+            elif pitch >= 0: 
+                pitch = 180 - pitch
+            
+            self.pose['yaw'].append(yaw)
+            self.pose['pitch'].append(pitch)
+            self.pose['roll'].append(roll)
+
+            if self.nose2d:
+                nose2d = self.nose2d
+                p1 = (int(nose2d[0]), int(nose2d[1]))
+                p2 = (int(nose2d[0] - yaw * 2), int(nose2d[1] - pitch * 2))
+
         return
     
     def __str__(self):

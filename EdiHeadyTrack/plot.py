@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/06/01 13:47:57 by taston           ###   ########.fr        #
+#    Updated: 2023/06/02 13:02:31 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -111,7 +111,7 @@ class Plot:
                                            'property':  f'{key}, {property}',
                                            'values':    y_data})
                         if key_times:
-                            key_frames = [int(sensor.facedetector.video.fps*time) for time in key_times]
+                            key_frames = [int(sensor.posedetector.video.fps*time) for time in key_times]
                             
                     elif isinstance(sensor, IMU):
                         x_data = property_dict['time']
@@ -154,16 +154,16 @@ class Plot:
             for sensor in self.sensors:
                 if isinstance(sensor, Head):
                     for idx, frame in enumerate(key_frames):
-                        img = sensor.facedetector.tracking_frames[frame]
+                        img = sensor.posedetector.tracking_frames[frame]
 
-                        frame_index = sensor.facedetector.face2d['frame'].index(frame)
-                        x_list = [pos[0] for pos in sensor.facedetector.face2d['all landmark positions'][frame_index]]
-                        y_list = [pos[1] for pos in sensor.facedetector.face2d['all landmark positions'][frame_index]]
+                        frame_index = sensor.posedetector.face2d['frame'].index(frame)
+                        x_list = [pos[0] for pos in sensor.posedetector.face2d['all landmark positions'][frame_index]]
+                        y_list = [pos[1] for pos in sensor.posedetector.face2d['all landmark positions'][frame_index]]
                         
                         top_bound = max(0, min(y_list[:]) - 200)
-                        bottom_bound = min(sensor.facedetector.video.height, max(y_list[:]) + 200)
+                        bottom_bound = min(sensor.posedetector.video.height, max(y_list[:]) + 200)
                         left_bound = max(0, min(x_list[:]) - 200)
-                        right_bound = min(sensor.facedetector.video.width, max(x_list[:]) + 200)
+                        right_bound = min(sensor.posedetector.video.width, max(x_list[:]) + 200)
                         
                         img = img[top_bound:bottom_bound, left_bound:right_bound, :]
 
