@@ -1,6 +1,10 @@
 # Videos/images
 videos_gitignore/
 data/tracking frames
+calibration.mp4
+tracking.mp4
+camera_distortion.csv
+camera_matrix.csv
 apitoken.txt
 testing.py
 
