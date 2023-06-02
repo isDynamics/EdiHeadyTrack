@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:35:24 by taston            #+#    #+#              #
-#    Updated: 2023/06/02 13:08:31 by taston           ###   ########.fr        #
+#    Updated: 2023/06/02 14:05:35 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -84,6 +84,7 @@ class Head(SensorData):
         super().__init__()
         Head._counter += 1
         self.posedetector = posedetector
+        self.pose = posedetector.pose
         if id:
             self.id = id
         else:
@@ -125,12 +126,12 @@ class Head(SensorData):
         """
         Calculates kinematic data from pose time history
         """
-        # print('Calculating kinematic data from head pose...')
+
 
         self.velocity['time'] = self.posedetector.pose['time'][1:]
         self.acceleration['time'] = self.posedetector.pose['time'][2:]
 
-        for key in list(self.posedetector.pose.keys())[1:]:
+        for key in list(self.posedetector.pose.keys())[2:]:
             self.velocity[key] = np.diff(np.array(self.posedetector.pose[key])) / np.diff(np.array(self.posedetector.pose['time']))
             self.acceleration[key] = np.diff(np.array(self.velocity[key])) / np.diff(np.array(self.velocity['time']))
 

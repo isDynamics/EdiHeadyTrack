@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/06/02 13:07:03 by taston           ###   ########.fr        #
+#    Updated: 2023/06/02 13:57:14 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,15 @@ class PoseDetector:
     def __init__(self, video=Video(), camera=Camera(), show=True):
         self.camera = camera
         self.video = video
+        self.face2d = {'time': [],
+                       'frame': [],
+                       'key landmark positions':    [],
+                       'all landmark positions':    []}
+        self.pose = {'frame':   [],
+                     'time':    [],
+                     'yaw':     [],
+                     'pitch':   [],
+                     'roll':    []}
         self.show = show
 
 class MediaPipe(PoseDetector):
@@ -125,15 +134,7 @@ class MediaPipe(PoseDetector):
                                                  self.minTrackCon)
         self.drawSpec = self.mpDraw.DrawingSpec(thickness=1, circle_radius=2)
         self.key_landmarks = [33, 263, 1, 61, 291, 199]
-        self.face2d = {'time': [],
-                       'frame': [],
-                       'key landmark positions':    [],
-                       'all landmark positions':    []}
         self.face3d = []
-        self.pose = {'time':    [],
-                     'yaw':     [],
-                     'pitch':   [],
-                     'roll':    []}
         self.run()
         self.calculate_pose()
         timestamp = datetime.now().strftime("%H:%M:%S")
@@ -168,14 +169,11 @@ class MediaPipe(PoseDetector):
             success, img = self.video.cap.read()
             if success:
                 progress_bar.update(1)
-                # current_frame = int(self.video.cap.get(1))
                 self.find_faces(img)
                 if self.show == True:
                     cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
                     cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
                     cv2.imshow("EdiHeadyTrack", img)
-                # cv2.imwrite(f'tracking frames/{current_frame}.png', img)
-                # self.video.writer.write(img)
                 out.write(img)
                 if cv2.waitKey(5) & 0xFF == ord('q'):
                     self.video.cap.release()
@@ -206,7 +204,7 @@ class MediaPipe(PoseDetector):
         results = self.faceMesh.process(imgRGB)
         frame_number = int(self.video.cap.get(cv2.CAP_PROP_POS_FRAMES))
         time = frame_number / self.video.fps
-        
+        # print(time)
         if results.multi_face_landmarks:
             self.face2d['time'].append(time)
             self.face2d['frame'].append(frame_number)
@@ -232,7 +230,6 @@ class MediaPipe(PoseDetector):
                             self.nose2d = (lm.x * self.video.width, lm.y * self.video.height)
                             nose3d = (lm.x * self.video.width, lm.y * self.video.height, lm.z * 3000)
 
-                            
                         key_landmark_positions.append(landmark_position)
 
                 self.face2d['all landmark positions'].append(landmark_positions)
@@ -250,7 +247,9 @@ class MediaPipe(PoseDetector):
         """
         print('Computing head pose from tracking data...')
         for idx, time in enumerate(self.face2d['time']):
+            # print(time)
             self.pose['time'].append(time)
+            self.pose['frame'].append(self.face2d['frame'][idx])
             face2d = self.face2d['key landmark positions'][idx]
             face2d = np.array(face2d, dtype=np.float64)
             face3d = np.array(self.face3d, dtype=np.float64)

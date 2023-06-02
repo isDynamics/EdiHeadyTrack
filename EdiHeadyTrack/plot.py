@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/06/02 13:02:31 by taston           ###   ########.fr        #
+#    Updated: 2023/06/02 14:18:00 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,14 +68,12 @@ class Plot:
         plt.rcParams.update({'font.size': 14})
         fig = plt.figure('EdiHeadyTrack - Head Data Plotting',figsize=[6,8])    
 
-        # if key_times:
-        #     key_frames = [int(240*time) for time in key_times]
-
         for sensor in self.sensors:
             if hasattr(sensor, property):
                 property_dict = getattr(sensor, property)
+                print(f'{sensor} has property {property}')
                 for idx, key in enumerate(list(property_dict.keys())[1:]):
-                    
+                    print('Number of subplots:', len(list(property_dict.keys())))
                     ax = plt.subplot(len(list(property_dict.keys())), 1, idx+2)
                     ax.grid(color='0.95')
                     if property == 'pose':
@@ -143,7 +141,9 @@ class Plot:
                     if idx + 2 == 3: 
                         handles, labels = ax.get_legend_handles_labels()
                         ax.legend(handles, labels, bbox_to_anchor=(1.0, 0.85), loc=2)
-
+            else:
+                print(f'{sensor} does NOT have property {property}')
+                
         ax1 = plt.subplot(411, sharex=ax)
         for time in key_times:
             ax1.axvline(x=time, color='green', ls=':')
@@ -156,7 +156,7 @@ class Plot:
                     for idx, frame in enumerate(key_frames):
                         img = sensor.posedetector.tracking_frames[frame]
 
-                        frame_index = sensor.posedetector.face2d['frame'].index(frame)
+                        frame_index = sensor.posedetector.pose['frame'].index(frame)
                         x_list = [pos[0] for pos in sensor.posedetector.face2d['all landmark positions'][frame_index]]
                         y_list = [pos[1] for pos in sensor.posedetector.face2d['all landmark positions'][frame_index]]
                         
