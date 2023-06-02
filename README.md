@@ -1,5 +1,5 @@
 
-[![License: GPL v3][![github](https://img.shields.io/badge/github-repo-000.svg?logo=github&labelColor=gray&color=blue)](https://github.com/isDynamics/EdiHeadyTrack/)
+[![License](https://img.shields.io/github/license/isDynamics/EdiHeadyTrack)](https://github.com/isDynamics/EdiHeadyTrack/blob/master/LICENSE)
 [![Build Status - GitHub](https://github.com/isDynamics/EdiHeadyTrack/workflows/pytesting/badge.svg)](https://github.com/isDynamics/EdiHeadyTrack/actions/workflows/pytesting.yml)
 [![codecov](https://codecov.io/gh/isDynamics/EdiHeadyTrack/branch/master/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/isDynamics/EdiHeadyTrack)
 [![Documentation Status](https://readthedocs.org/projects/ediheadytrack/badge/?version=latest)](https://ediheadytrack.readthedocs.io/en/latest/?badge=latest)
