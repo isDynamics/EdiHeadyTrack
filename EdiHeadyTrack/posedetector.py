@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/06/02 13:57:14 by taston           ###   ########.fr        #
+#    Updated: 2023/06/06 14:39:14 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,9 @@ import numpy as np
 from numpy import genfromtxt
 from tqdm import tqdm
 from datetime import datetime
+
+from EdiHeadyTrack.camera import Camera
+from EdiHeadyTrack.video import Video
 from .camera import Camera
 from .video import Video
 from .filter import Filter
@@ -303,3 +306,20 @@ class TDDFA_V2(PoseDetector):
     -------
     
     """
+
+    def __init__(self, video=Video(), camera=Camera(), show=True):
+        super().__init__(video, camera, show)
+        self.run()
+
+    def run(self):
+        # import TDDFA_v2 as TDDFA_v2
+        from .TDDFA_v2.FaceBoxes import FaceBoxes
+        from .TDDFA_v2.TDDFA import TDDFA
+        from .TDDFA_v2.utils.render import render
+        from .TDDFA_v2.utils.pose import viz_pose
+        from .TDDFA_v2.utils.functions import cv_draw_landmark, get_suffix
+        
+        import os 
+        os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+        os.environ['OMP_NUM_THREADS'] = '4'
+

@@ -7,6 +7,8 @@ import cv2
 import imageio
 from tqdm import tqdm
 import yaml
+import os
+print(os.getcwd())
 
 from FaceBoxes import FaceBoxes
 from TDDFA import TDDFA

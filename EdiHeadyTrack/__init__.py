@@ -8,8 +8,10 @@ from .video import(
 
 
 from .posedetector import(
-    MediaPipe
+    MediaPipe,
+    TDDFA_V2
 )
+
 
 from .imu import(
     Wax9
