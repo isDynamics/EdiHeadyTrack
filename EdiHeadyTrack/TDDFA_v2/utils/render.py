@@ -9,8 +9,8 @@ sys.path.append('..')
 import cv2
 import numpy as np
 
-from Sim3DR import RenderPipeline
-from utils.functions import plot_image
+from EdiHeadyTrack.TDDFA_v2.Sim3DR import RenderPipeline
+from EdiHeadyTrack.TDDFA_v2.utils.functions import plot_image
 from .tddfa_util import _to_ctype
 
 cfg = {

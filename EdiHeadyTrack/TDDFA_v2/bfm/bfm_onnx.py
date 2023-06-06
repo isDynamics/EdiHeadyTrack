@@ -11,7 +11,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from utils.io import _load, _numpy_to_cuda, _numpy_to_tensor
+from EdiHeadyTrack.TDDFA_v2.utils.io import _load, _numpy_to_cuda, _numpy_to_tensor
 
 make_abs_path = lambda fn: osp.join(osp.dirname(osp.realpath(__file__)), fn)
 

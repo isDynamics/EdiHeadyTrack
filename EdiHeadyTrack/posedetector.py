@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/06/06 14:39:14 by taston           ###   ########.fr        #
+#    Updated: 2023/06/06 16:28:51 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -309,10 +309,21 @@ class TDDFA_V2(PoseDetector):
 
     def __init__(self, video=Video(), camera=Camera(), show=True):
         super().__init__(video, camera, show)
-        self.run()
+        import argparse
+        import os.path as osp
+        parser = argparse.ArgumentParser(description='The demo of video of 3DDFA_V2')
+        current_path = osp.dirname(osp.abspath(__file__))
+        parser.add_argument('-c', '--config', type=str, default=f'{current_path}/TDDFA_v2/configs/mb1_120x120.yml')
+        parser.add_argument('-f', '--video_fp', type=str, default=self.video.filename)
+        parser.add_argument('-m', '--mode', default='cpu', type=str, help='gpu or cpu mode')
+        parser.add_argument('-o', '--opt', type=str, default='3d', choices=['2d_sparse', '3d'])
+        parser.add_argument('--onnx', action='store_true', default=False)
 
-    def run(self):
-        # import TDDFA_v2 as TDDFA_v2
+        args = parser.parse_args()
+        self.run(args)
+
+    def run(self, args):
+        import EdiHeadyTrack.TDDFA_v2 as TDDFA_v2
         from .TDDFA_v2.FaceBoxes import FaceBoxes
         from .TDDFA_v2.TDDFA import TDDFA
         from .TDDFA_v2.utils.render import render
@@ -320,6 +331,16 @@ class TDDFA_V2(PoseDetector):
         from .TDDFA_v2.utils.functions import cv_draw_landmark, get_suffix
         
         import os 
+        import imageio
+        from tqdm import tqdm
+        import yaml
+        import os
         os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
         os.environ['OMP_NUM_THREADS'] = '4'
 
+        from .TDDFA_v2.TDDFA_ONNX import TDDFA_ONNX
+        from .TDDFA_v2.FaceBoxes.FaceBoxes_ONNX import FaceBoxes_ONNX
+
+        cfg = yaml.load(open(args.config), Loader=yaml.SafeLoader)
+        face_boxes = FaceBoxes_ONNX()
+        tddfa = TDDFA_ONNX(**cfg)

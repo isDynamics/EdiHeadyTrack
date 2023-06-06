@@ -7,8 +7,8 @@ import sys
 sys.path.append('..')
 
 import torch
-import models
-from utils.tddfa_util import load_model
+import EdiHeadyTrack.TDDFA_v2.models as models
+from EdiHeadyTrack.TDDFA_v2.utils.tddfa_util import load_model
 
 
 def convert_to_onnx(**kvs):

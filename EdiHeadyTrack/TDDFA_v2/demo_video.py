@@ -3,19 +3,17 @@
 __author__ = 'cleardusk'
 
 import argparse
-import cv2
 import imageio
 from tqdm import tqdm
 import yaml
 import os
-print(os.getcwd())
 
-from FaceBoxes import FaceBoxes
-from TDDFA import TDDFA
-from utils.render import render
-from utils.pose import viz_pose
+from EdiHeadyTrack.TDDFA_v2.FaceBoxes import FaceBoxes
+from EdiHeadyTrack.TDDFA_v2.TDDFA import TDDFA
+from EdiHeadyTrack.TDDFA_v2.utils.render import render
+from EdiHeadyTrack.TDDFA_v2.utils.pose import viz_pose
 # from utils.render_ctypes import render
-from utils.functions import cv_draw_landmark, get_suffix
+from EdiHeadyTrack.TDDFA_v2.utils.functions import cv_draw_landmark, get_suffix
 
 
 def main(args):
@@ -27,8 +25,8 @@ def main(args):
         os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
         os.environ['OMP_NUM_THREADS'] = '4'
 
-        from FaceBoxes.FaceBoxes_ONNX import FaceBoxes_ONNX
-        from TDDFA_ONNX import TDDFA_ONNX
+        from EdiHeadyTrack.TDDFA_v2.FaceBoxes.FaceBoxes_ONNX import FaceBoxes_ONNX
+        from EdiHeadyTrack.TDDFA_v2.TDDFA_ONNX import TDDFA_ONNX
 
         face_boxes = FaceBoxes_ONNX()
         tddfa = TDDFA_ONNX(**cfg)
@@ -81,8 +79,6 @@ def main(args):
             res = cv_draw_landmark(frame_bgr, ver)
         elif args.opt == '3d':
             res = render(frame_bgr, [ver], tddfa.tri)
-            # render(img, ver_lst, tddfa.tri, alpha=0.6, show_flag=args.show_flag, wfp=wfp)
-            # viz_pose(img, param_lst, ver_lst, show_flag=args.show_flag, wfp=wfp)
             viz_pose(frame, param_lst, [ver])
         else:
             raise ValueError(f'Unknown opt {args.opt}')
