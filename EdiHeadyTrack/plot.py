@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/06/06 14:10:02 by taston           ###   ########.fr        #
+#    Updated: 2023/06/08 15:07:15 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -157,7 +157,8 @@ class Plot:
                         frame_index = sensor.posedetector.pose['frame'].index(frame)
                         x_list = [pos[0] for pos in sensor.posedetector.face2d['all landmark positions'][frame_index]]
                         y_list = [pos[1] for pos in sensor.posedetector.face2d['all landmark positions'][frame_index]]
-                        
+                        # print(x_list)
+                        # print(y_list)
                         top_bound = max(0, min(y_list[:]) - 200)
                         bottom_bound = min(sensor.posedetector.video.height, max(y_list[:]) + 200)
                         left_bound = max(0, min(x_list[:]) - 200)
