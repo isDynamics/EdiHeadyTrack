@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/06/06 16:28:51 by taston           ###   ########.fr        #
+#    Updated: 2023/06/08 12:14:19 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -308,26 +308,45 @@ class TDDFA_V2(PoseDetector):
     """
 
     def __init__(self, video=Video(), camera=Camera(), show=True):
+        """
+        Parameters
+        ----------
+        video : Video, optional
+            video to perform head pose estimation on (default is empty Video)
+        """
         super().__init__(video, camera, show)
         import argparse
         import os.path as osp
         parser = argparse.ArgumentParser(description='The demo of video of 3DDFA_V2')
-        current_path = osp.dirname(osp.abspath(__file__))
-        parser.add_argument('-c', '--config', type=str, default=f'{current_path}/TDDFA_v2/configs/mb1_120x120.yml')
+        self.current_path = osp.dirname(osp.abspath(__file__))
+        parser.add_argument('-c', '--config', type=str, default=f'{self.current_path}/TDDFA_v2/configs/mb1_120x120.yml')
         parser.add_argument('-f', '--video_fp', type=str, default=self.video.filename)
         parser.add_argument('-m', '--mode', default='cpu', type=str, help='gpu or cpu mode')
         parser.add_argument('-o', '--opt', type=str, default='3d', choices=['2d_sparse', '3d'])
         parser.add_argument('--onnx', action='store_true', default=False)
 
         args = parser.parse_args()
-        self.run(args)
+        # self.run(args)
+        parser.add_argument('-n_pre', default=1, type=int, help='the pre frames of smoothing')
+        parser.add_argument('-n_next', default=1, type=int, help='the next frames of smoothing')
+        parser.add_argument('-s', '--start', default=-1, type=int, help='the started frames')
+        parser.add_argument('-e', '--end', default=-1, type=int, help='the end frame')
+        args = parser.parse_args()
+        self.run_smooth(args)
 
     def run(self, args):
+        """Runs through 3DDFA_v2 tracking process, calling relevant
+        functions
+        
+        More information found here:
+
+        https://github.com/cleardusk/3DDFA_V2
+        """
         import EdiHeadyTrack.TDDFA_v2 as TDDFA_v2
         from .TDDFA_v2.FaceBoxes import FaceBoxes
         from .TDDFA_v2.TDDFA import TDDFA
         from .TDDFA_v2.utils.render import render
-        from .TDDFA_v2.utils.pose import viz_pose
+        from .TDDFA_v2.utils.pose import viz_pose, plot_pose_box
         from .TDDFA_v2.utils.functions import cv_draw_landmark, get_suffix
         
         import os 
@@ -344,3 +363,204 @@ class TDDFA_V2(PoseDetector):
         cfg = yaml.load(open(args.config), Loader=yaml.SafeLoader)
         face_boxes = FaceBoxes_ONNX()
         tddfa = TDDFA_ONNX(**cfg)
+
+        # Given a video path
+        fn = args.video_fp.split('/')[-1]
+        reader = imageio.get_reader(args.video_fp)
+
+        fps = reader.get_meta_data()['fps']
+
+        suffix = get_suffix(args.video_fp)
+        # video_wfp = f'{self.current_path}/TDDFA_v2/examples/results/videos/{fn.replace(suffix, "")}_{args.opt}.mp4'
+        video_wfp = f'TDDFA_tracking.mp4'
+        writer = imageio.get_writer(video_wfp, fps=fps)
+
+        # run
+        dense_flag = args.opt in ('3d',)
+        pre_ver = None
+        for i, frame in tqdm(enumerate(reader)):
+            frame_bgr = frame[..., ::-1]  # RGB->BGR
+            # img = cv2.imread(frame_bgr)
+            if i == 0:
+                # the first frame, detect face, here we only use the first face, you can change depending on your need
+                boxes = face_boxes(frame_bgr)
+                boxes = [boxes[0]]
+                param_lst, roi_box_lst = tddfa(frame_bgr, boxes)
+                ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
+
+                # refine
+                param_lst, roi_box_lst = tddfa(frame_bgr, [ver], crop_policy='landmark')
+                ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
+            else:
+                param_lst, roi_box_lst = tddfa(frame_bgr, [pre_ver], crop_policy='landmark')
+
+                roi_box = roi_box_lst[0]
+                # todo: add confidence threshold to judge the tracking is failed
+                if abs(roi_box[2] - roi_box[0]) * abs(roi_box[3] - roi_box[1]) < 2020:
+                    boxes = face_boxes(frame_bgr)
+                    boxes = [boxes[0]]
+                    param_lst, roi_box_lst = tddfa(frame_bgr, boxes)
+
+                ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
+
+            pre_ver = ver  # for tracking
+
+            if args.opt == '2d_sparse':
+                res = cv_draw_landmark(frame_bgr, ver)
+            elif args.opt == '3d':
+                res = render(frame_bgr, [ver], tddfa.tri, show_flag=False)
+                res, pose = viz_pose(res, param_lst, [ver])   
+            else:
+                raise ValueError(f'Unknown opt {args.opt}')
+
+            writer.append_data(res[..., ::-1])  # BGR->RGB
+
+        writer.close()
+        print(f'Dump to {video_wfp}')
+
+
+    def run_smooth(self, args):
+        """Runs through 3DDFA_v2 SMOOTH tracking process, calling relevant
+        functions
+        
+        More information found here:
+
+        https://github.com/cleardusk/3DDFA_V2
+        """
+        import EdiHeadyTrack.TDDFA_v2 as TDDFA_v2
+        from .TDDFA_v2.FaceBoxes import FaceBoxes
+        from .TDDFA_v2.TDDFA import TDDFA
+        from .TDDFA_v2.utils.render import render
+        from .TDDFA_v2.utils.pose import viz_pose
+        from .TDDFA_v2.utils.functions import cv_draw_landmark, get_suffix
+        
+        import os 
+        import imageio
+        from tqdm import tqdm
+        import yaml
+        
+        from collections import deque 
+
+        import os
+        os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+        os.environ['OMP_NUM_THREADS'] = '4'
+
+        from .TDDFA_v2.TDDFA_ONNX import TDDFA_ONNX
+        from .TDDFA_v2.FaceBoxes.FaceBoxes_ONNX import FaceBoxes_ONNX
+
+        cfg = yaml.load(open(args.config), Loader=yaml.SafeLoader)
+        face_boxes = FaceBoxes_ONNX()
+        tddfa = TDDFA_ONNX(**cfg)
+
+        # Given a video path
+        fn = args.video_fp.split('/')[-1]
+        reader = imageio.get_reader(args.video_fp)
+
+        fps = reader.get_meta_data()['fps']
+
+        suffix = get_suffix(args.video_fp)
+        # video_wfp = f'{self.current_path}/TDDFA_v2/examples/results/videos/{fn.replace(suffix, "")}_{args.opt}.mp4'
+        video_wfp = f'TDDFA_tracking_smooth.mp4'
+        writer = imageio.get_writer(video_wfp, fps=fps)
+
+        # the simple implementation of average smoothing by looking ahead by n_next frames
+        # assert the frames of the video >= n
+        n_pre, n_next = args.n_pre, args.n_next
+        n = n_pre + n_next + 1
+        queue_ver = deque()
+        queue_frame = deque()
+
+        # run
+        dense_flag = args.opt in ('2d_dense', '3d',)
+        pre_ver = None
+        for i, frame in tqdm(enumerate(reader)):
+            if args.start > 0 and i < args.start:
+                continue
+            if args.end > 0 and i > args.end:
+                break
+
+            frame_bgr = frame[..., ::-1]  # RGB->BGR
+
+            if i == 0:
+                # detect
+                boxes = face_boxes(frame_bgr)
+                boxes = [boxes[0]]
+                param_lst, roi_box_lst = tddfa(frame_bgr, boxes)
+                ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
+
+                # refine
+                param_lst, roi_box_lst = tddfa(frame_bgr, [ver], crop_policy='landmark')
+                ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
+
+                # padding queue
+                for _ in range(n_pre):
+                    queue_ver.append(ver.copy())
+                queue_ver.append(ver.copy())
+
+                for _ in range(n_pre):
+                    queue_frame.append(frame_bgr.copy())
+                queue_frame.append(frame_bgr.copy())
+
+            else:
+                param_lst, roi_box_lst = tddfa(frame_bgr, [pre_ver], crop_policy='landmark')
+
+                roi_box = roi_box_lst[0]
+                # todo: add confidence threshold to judge the tracking is failed
+                if abs(roi_box[2] - roi_box[0]) * abs(roi_box[3] - roi_box[1]) < 2020:
+                    boxes = face_boxes(frame_bgr)
+                    boxes = [boxes[0]]
+                    param_lst, roi_box_lst = tddfa(frame_bgr, boxes)
+
+                ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
+
+                queue_ver.append(ver.copy())
+                queue_frame.append(frame_bgr.copy())
+
+            pre_ver = ver  # for tracking
+
+            # smoothing: enqueue and dequeue ops
+            if len(queue_ver) >= n:
+                ver_ave = np.mean(queue_ver, axis=0)
+
+                if args.opt == '2d_sparse':
+                    img_draw = cv_draw_landmark(queue_frame[n_pre], ver_ave)  # since we use padding
+                elif args.opt == '2d_dense':
+                    img_draw = cv_draw_landmark(queue_frame[n_pre], ver_ave, size=1)
+                elif args.opt == '3d':
+                    img_draw = render(queue_frame[n_pre], [ver_ave], tddfa.tri, alpha=0.7, show_flag=False)
+                    img_draw, pose = viz_pose(img_draw, param_lst, [ver]) 
+                    self.pose['yaw'].append(pose[0])
+                    self.pose['pitch'].append(pose[1])
+                    self.pose['roll'].append(pose[2])
+                else:
+                    raise ValueError(f'Unknown opt {args.opt}')
+
+                writer.append_data(img_draw[:, :, ::-1])  # BGR->RGB
+
+                queue_ver.popleft()
+                queue_frame.popleft()
+
+        # we will lost the last n_next frames, still padding
+        for _ in range(n_next):
+            queue_ver.append(ver.copy())
+            queue_frame.append(frame_bgr.copy())  # the last frame
+
+            ver_ave = np.mean(queue_ver, axis=0)
+
+            if args.opt == '2d_sparse':
+                img_draw = cv_draw_landmark(queue_frame[n_pre], ver_ave)  # since we use padding
+            elif args.opt == '2d_dense':
+                img_draw = cv_draw_landmark(queue_frame[n_pre], ver_ave, size=1)
+            elif args.opt == '3d':
+                img_draw = render(queue_frame[n_pre], [ver_ave], tddfa.tri, alpha=0.7)
+                img_draw = viz_pose(img_draw, param_lst, [ver])  
+            else:
+                raise ValueError(f'Unknown opt {args.opt}')
+
+            writer.append_data(img_draw[..., ::-1])  # BGR->RGB
+
+            queue_ver.popleft()
+            queue_frame.popleft()
+
+        writer.close()
+        print(f'Dump to {video_wfp}')

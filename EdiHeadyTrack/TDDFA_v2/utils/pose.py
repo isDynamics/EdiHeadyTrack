@@ -129,7 +129,7 @@ def viz_pose(img, param_lst, ver_lst, show_flag=False, wfp=None):
         P, pose = calc_pose(param)
         img = plot_pose_box(img, P, ver)
         # print(P[:, :3])
-        print(f'yaw: {pose[0]:.1f}, pitch: {pose[1]:.1f}, roll: {pose[2]:.1f}')
+        # print(f'yaw: {pose[0]:.1f}, pitch: {pose[1]:.1f}, roll: {pose[2]:.1f}')
 
     if wfp is not None:
         cv2.imwrite(wfp, img)
@@ -138,4 +138,4 @@ def viz_pose(img, param_lst, ver_lst, show_flag=False, wfp=None):
     if show_flag:
         plot_image(img)
 
-    return img
+    return img, pose

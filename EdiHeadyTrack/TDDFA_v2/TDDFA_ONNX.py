@@ -28,10 +28,11 @@ class TDDFA_ONNX(object):
         # load onnx version of BFM
         # print()
         current_path = osp.dirname(osp.abspath(__file__))
-        print(current_path)
-        bfm_fp = kvs.get('bfm_fp', f'{current_path}/configs/bfm_noneck_v3.pkl')
+        # bfm_fp = kvs.get('bfm_fp', f'{current_path}/configs/bfm_noneck_v3.pkl')
+        bfm_fp = f'{current_path}/configs/bfm_noneck_v3.pkl'
         # print(bfm_fp)
         bfm_onnx_fp = bfm_fp.replace('.pkl', '.onnx')
+        
         if not osp.exists(bfm_onnx_fp):
             convert_bfm_to_onnx(
                 bfm_onnx_fp,
@@ -50,12 +51,14 @@ class TDDFA_ONNX(object):
         self.gpu_id = kvs.get('gpu_id', 0)
         self.size = kvs.get('size', 120)
 
-        param_mean_std_fp = kvs.get(
-            'param_mean_std_fp', f'{current_path}/configs/param_mean_std_62d_{self.size}x{self.size}.pkl'
-        )
+        # param_mean_std_fp = kvs.get(
+        #     'param_mean_std_fp', f'{current_path}/configs/param_mean_std_62d_{self.size}x{self.size}.pkl'
+        # )
 
-        print(kvs.get('onnx_fp'))
-        onnx_fp = kvs.get('onnx_fp', kvs.get('checkpoint_fp').replace('.pth', '.onnx'))
+        param_mean_std_fp = f'{current_path}/configs/param_mean_std_62d_{self.size}x{self.size}.pkl'
+        # print(kvs.get('onnx_fp'))
+        # onnx_fp = kvs.get('onnx_fp', kvs.get('checkpoint_fp').replace('.pth', '.onnx'))
+        onnx_fp = f'{current_path}/weights/mb1_120x120.onnx'
 
         # convert to onnx online if not existed
         if onnx_fp is None or not osp.exists(onnx_fp):
