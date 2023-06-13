@@ -1,6 +1,7 @@
 # Videos/images
 videos_gitignore/
 data/tracking frames
+*.mp4
 calibration.mp4
 tracking.mp4
 camera_distortion.csv
