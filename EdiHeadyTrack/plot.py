@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/06/13 09:54:42 by taston           ###   ########.fr        #
+#    Updated: 2023/06/13 15:39:39 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -179,6 +179,7 @@ class Plot:
         Plot object.
         '''
         sensor_prev = None
+        print(self.lines)
         for line in self.lines:
             sensor = line['sensor']
 
