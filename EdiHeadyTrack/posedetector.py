@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/06/08 15:26:57 by taston           ###   ########.fr        #
+#    Updated: 2023/06/13 15:14:59 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ from .filter import Filter
 
 class PoseDetector:
     """
-    A class for representing a PoseDetector
+    Abstract class for representing a PoseDetector
     
     ...
     
@@ -37,6 +37,10 @@ class PoseDetector:
         dict of detected face points in 2d
     face3d : list
         list of known 3d face points (from mesh model)
+    show : bool, optional
+            flag for displaying video output (default True)
+    tracking_frames : list, ndarray
+        list containing frames which have successfully been tracked
     """
     def __init__(self, video=Video(), camera=Camera(), show=True):
         self.camera = camera
@@ -51,6 +55,7 @@ class PoseDetector:
                      'pitch':   [],
                      'roll':    []}
         self.show = show
+        self.tracking_frames = []
 
 class MediaPipe(PoseDetector):
     """
@@ -83,8 +88,6 @@ class MediaPipe(PoseDetector):
     staticMode : bool
         bool representing if searching for landmarks on static frame
         or non static video file
-    tracking_frames : list
-        list of frame numbers which have successfully been tracked
     face2d : dict
         dict of detected face points in 2d
     face3d : list
@@ -106,6 +109,8 @@ class MediaPipe(PoseDetector):
             video to perform head pose estimation on (default is empty Video)
         camera : Camera, optional
             camera used to capture video (default is uncalibrated Camera)
+        show : bool, optional
+            flag for displaying video output (default True)
         staticMode : bool, optional
             flag specifying if tracking is static or not (default False)
         maxFaces : int, optional
@@ -167,7 +172,7 @@ class MediaPipe(PoseDetector):
                               self.video.fps,
                               (self.video.width,self.video.height))
         # self.video.create_writer('tracking.mp4')
-        self.tracking_frames = []
+        self.video.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
         while True:
             success, img = self.video.cap.read()
             if success:
@@ -179,14 +184,14 @@ class MediaPipe(PoseDetector):
                     cv2.imshow("EdiHeadyTrack", img)
                 out.write(img)
                 if cv2.waitKey(5) & 0xFF == ord('q'):
-                    self.video.cap.release()
+                    # self.video.cap.release()
                     out.release()
                     cv2.destroyAllWindows()
                     progress_bar.close()
                     print('Face tracking interuppted...')
                     break     
             else:
-                self.video.cap.release()
+                # self.video.cap.release()
                 out.release()
                 cv2.destroyAllWindows()
                 progress_bar.close()
@@ -300,21 +305,42 @@ class TDDFA_V2(PoseDetector):
     
     Attributes
     ----------
-    
+    current_path : str
+        string for tracking file path of 3DDFA source files, required
+        due configuration of 3DDFA module.
+    tracking_frames : list, ndarray
+        list containing frames which have successfully been tracked
         
     Methods
     -------
-    
+    run(args)
+        run through the tracking procedure using 3DDFA_v2
+    run_smooth(args)
+        run through the tracking procedure using 3DDFA_v2 with smoothing
     """
 
-    def __init__(self, video=Video(), camera=Camera(), show=True):
+    def __init__(self, video=Video(), camera=Camera(), show=True, smooth=False, dense=False):
         """
         Parameters
         ----------
         video : Video, optional
             video to perform head pose estimation on (default is empty Video)
+        camera : Camera, optional
+            camera used to capture video (default is uncalibrated Camera)
+        show : bool, optional
+            flag for displaying video output (default True)
+        smooth : bool
+            flag for using smooth tracking by looking n frames ahead (default False)
+        dense : bool
+            flag for using dense facial landmark model with 38,365 landmarks (default False, with 68 landmarks)
+        
         """
         super().__init__(video, camera, show)
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        print('-'*120)
+        print('{:<100} {:>19}'.format(f'Creating TDDFA_v2 object for video {self.video.filename}:', timestamp))
+        print('-'*120)
+        print(self.video)
         import argparse
         import os.path as osp
         parser = argparse.ArgumentParser(description='The demo of video of 3DDFA_V2')
@@ -322,18 +348,28 @@ class TDDFA_V2(PoseDetector):
         parser.add_argument('-c', '--config', type=str, default=f'{self.current_path}/TDDFA_v2/configs/mb1_120x120.yml')
         parser.add_argument('-f', '--video_fp', type=str, default=self.video.filename)
         parser.add_argument('-m', '--mode', default='cpu', type=str, help='gpu or cpu mode')
-        parser.add_argument('-o', '--opt', type=str, default='3d', choices=['2d_sparse', '3d'])
+        if dense:
+            parser.add_argument('-o', '--opt', type=str, default='dense', choices=['sparse', 'dense'])
+        else:
+            parser.add_argument('-o', '--opt', type=str, default='sparse', choices=['sparse', 'dense'])
         parser.add_argument('--onnx', action='store_true', default=False)
+        if smooth:
+            parser.add_argument('-n_pre', default=5, type=int, help='the pre frames of smoothing')
+            parser.add_argument('-n_next', default=5, type=int, help='the next frames of smoothing')
+            parser.add_argument('-s', '--start', default=-1, type=int, help='the started frames')
+            parser.add_argument('-e', '--end', default=-1, type=int, help='the end frame')
+            args = parser.parse_args()
+            self.run_smooth(args)
+        else:
+            args = parser.parse_args()
+            self.run(args)
 
-        args = parser.parse_args()
-        self.run(args)
-        # parser.add_argument('-n_pre', default=1, type=int, help='the pre frames of smoothing')
-        # parser.add_argument('-n_next', default=1, type=int, help='the next frames of smoothing')
-        # parser.add_argument('-s', '--start', default=-1, type=int, help='the started frames')
-        # parser.add_argument('-e', '--end', default=-1, type=int, help='the end frame')
-        # args = parser.parse_args()
-        # self.run_smooth(args)
-
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        print('-'*120)
+        print('{:<100} {:>19}'.format(f'MediaPipe object complete!', timestamp))
+        print('-'*120)
+        
+    
     def run(self, args):
         """Runs through 3DDFA_v2 tracking process, calling relevant
         functions
@@ -380,14 +416,13 @@ class TDDFA_V2(PoseDetector):
                               (self.video.width,self.video.height))
 
         # run
-        dense_flag = args.opt in ('3d',)
+        dense_flag = args.opt in ('dense',)
         pre_ver = None
 
-        self.tracking_frames = []
         progress_bar = tqdm(range(self.video.total_frames))
         
+        self.video.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
         while True:
-            
             i = int(self.video.cap.get(cv2.CAP_PROP_POS_FRAMES))
             success, frame_bgr = self.video.cap.read()
             if success:
@@ -415,25 +450,24 @@ class TDDFA_V2(PoseDetector):
                     ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
 
                 pre_ver = ver  # for tracking
+                
+                # Adding landmarks to face2d
+                self.face2d['frame'].append(i)
+                self.face2d['time'].append(i/self.video.fps)
 
-                if args.opt == '2d_sparse':
+                # print(list(ver[:-1][0]))
+                x = list(ver[:-1][0])
+                y = list(ver[:-1][1])
+                top = [int(round(x[y.index(max(y))])), int(round(max(y)))]
+                bottom = [int(round(x[y.index(min(y))])), int(round(min(y)))]
+                left = [int(round(min(x))), int(round(y[x.index(min(x))]))]
+                right = [int(round(max(x))), int(round(y[x.index(max(x))]))]
+                landmark_positions = [top, bottom, left, right]
+                self.face2d['all landmark positions'].append(landmark_positions)
+
+                if args.opt == 'sparse':
                     res = cv_draw_landmark(frame_bgr, ver)
-                elif args.opt == '3d':
-                    res = render(frame_bgr, [ver], tddfa.tri, show_flag=False)
                     res, pose = viz_pose(res, param_lst, [ver]) 
-                    self.face2d['frame'].append(i)
-                    self.face2d['time'].append(i/self.video.fps)
-                    landmark_positions=[]
-                    for lms in [ver]:
-                        lms_x = lms[0]
-                        lms_y = lms[1]
-                        print(lms)
-                        for idx, x in enumerate(list(lms_x)):
-                            landmark_position = [int(round(lms_x[idx])), int(round(lms_y[idx]))]
-                            landmark_positions.append(landmark_position)
-
-                    # print(landmark_positions)
-                    self.face2d['all landmark positions'].append(landmark_positions)
                     self.pose['frame'].append(i)
                     self.pose['time'].append(i/self.video.fps)
                     self.pose['yaw'].append(pose[0])
@@ -446,17 +480,38 @@ class TDDFA_V2(PoseDetector):
                     writer.write(res)
                     self.tracking_frames.append(cv2.cvtColor(res, cv2.COLOR_BGR2RGB))
                     if cv2.waitKey(5) & 0xFF == ord('q'):
-                        self.video.cap.release()
+                        # self.video.cap.release()
                         writer.release()
                         cv2.destroyAllWindows()
                         progress_bar.close()
-                        print('Face tracking interuppted...')
+                        print('Face tracking interrupted...')
+                        break
+                elif args.opt == 'dense':
+                    res = render(frame_bgr, [ver], tddfa.tri, show_flag=False)
+                    res, pose = viz_pose(res, param_lst, [ver]) 
+                    self.pose['frame'].append(i)
+                    self.pose['time'].append(i/self.video.fps)
+                    self.pose['yaw'].append(pose[0])
+                    self.pose['pitch'].append(pose[1]*-1)
+                    self.pose['roll'].append(pose[2]*-1)   
+                    if self.show == True:
+                        cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
+                        cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
+                        cv2.imshow('EdiHeadyTrack', res)
+                    writer.write(res)
+                    self.tracking_frames.append(cv2.cvtColor(res, cv2.COLOR_BGR2RGB))
+                    if cv2.waitKey(5) & 0xFF == ord('q'):
+                        # self.video.cap.release()
+                        writer.release()
+                        cv2.destroyAllWindows()
+                        progress_bar.close()
+                        print('Face tracking interrupted...')
                         break
                     
                 else:
                     raise ValueError(f'Unknown opt {args.opt}')
             else:
-                self.video.cap.release()
+                # self.video.cap.release()
                 writer.release()
                 cv2.destroyAllWindows()
                 progress_bar.close()
@@ -469,9 +524,200 @@ class TDDFA_V2(PoseDetector):
     def run_smooth(self, args):
         """Runs through 3DDFA_v2 SMOOTH tracking process, calling relevant
         functions
+
+        'Smooth' looks n frames ahead to perform tracking. 
         
         More information found here:
 
         https://github.com/cleardusk/3DDFA_V2
+
         """
+
+        from .TDDFA_v2.utils.render import render
+        from .TDDFA_v2.utils.pose import viz_pose, plot_pose_box
+        from .TDDFA_v2.utils.functions import cv_draw_landmark, get_suffix
+        
+        import os 
+        import imageio
+        from tqdm import tqdm
+        import yaml
+        from collections import deque
+        import os
+        os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+        os.environ['OMP_NUM_THREADS'] = '4'
+
+        from .TDDFA_v2.TDDFA_ONNX import TDDFA_ONNX
+        from .TDDFA_v2.FaceBoxes.FaceBoxes_ONNX import FaceBoxes_ONNX
+
+        cfg = yaml.load(open(args.config), Loader=yaml.SafeLoader)
+        face_boxes = FaceBoxes_ONNX()
+        tddfa = TDDFA_ONNX(**cfg)
+
+        # Given a video path
+        fn = args.video_fp.split('/')[-1]
+        reader = imageio.get_reader(args.video_fp)
+
+        fps = reader.get_meta_data()['fps']
+        suffix = get_suffix(args.video_fp)
+        video_wfp = f'TDDFA_tracking_smooth.mp4'
+        writer = cv2.VideoWriter(video_wfp,
+                              cv2.VideoWriter_fourcc(*'mp4v'),
+                              self.video.fps,
+                              (self.video.width,self.video.height))
+
+        # the simple implementation of average smoothing by looking ahead by n_next frames
+        # assert the frames of the video >= n
+        n_pre, n_next = args.n_pre, args.n_next
+        n = n_pre + n_next + 1
+        queue_ver = deque()
+        queue_frame = deque()
+
+        # run
+        dense_flag = args.opt in ('dense',)
+        pre_ver = None
+
+        progress_bar = tqdm(range(self.video.total_frames))
+        
+        self.video.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+        while True:
+            i = int(self.video.cap.get(cv2.CAP_PROP_POS_FRAMES))
+            if args.start > 0 and i < args.start:
+                continue
+            if args.end > 0 and i > args.end:
+                break
+
+            success, frame_bgr = self.video.cap.read()
+            
+            if success:
+                progress_bar.update(1)
+                if i == 0:
+                    # the first frame, detect face, here we only use the first face, you can change depending on your need
+                    boxes = face_boxes(frame_bgr)
+                    boxes = [boxes[0]]
+                    param_lst, roi_box_lst = tddfa(frame_bgr, boxes)
+                    ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
+
+                    # refine
+                    param_lst, roi_box_lst = tddfa(frame_bgr, [ver], crop_policy='landmark')
+                    ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
+
+                    # padding queue
+                    for _ in range(n_pre):
+                        queue_ver.append(ver.copy())
+                    queue_ver.append(ver.copy())
+
+                    for _ in range(n_pre):
+                        queue_frame.append(frame_bgr.copy())
+                    queue_frame.append(frame_bgr.copy())
+                    
+                else:
+                    param_lst, roi_box_lst = tddfa(frame_bgr, [pre_ver], crop_policy='landmark')
+
+                    roi_box = roi_box_lst[0]
+                    # todo: add confidence threshold to judge the tracking is failed
+                    if abs(roi_box[2] - roi_box[0]) * abs(roi_box[3] - roi_box[1]) < 2020:
+                        boxes = face_boxes(frame_bgr)
+                        boxes = [boxes[0]]
+                        param_lst, roi_box_lst = tddfa(frame_bgr, boxes)
+
+                    ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
+
+                    queue_ver.append(ver.copy())
+                    queue_frame.append(frame_bgr.copy())
+                    
+                pre_ver = ver  # for tracking
+
+                # Adding landmarks to face2d
+                self.face2d['frame'].append(i)
+                self.face2d['time'].append(i/self.video.fps)
+
+                # print(list(ver[:-1][0]))
+                x = list(ver[:-1][0])
+                y = list(ver[:-1][1])
+                top = [int(round(x[y.index(max(y))])), int(round(max(y)))]
+                bottom = [int(round(x[y.index(min(y))])), int(round(min(y)))]
+                left = [int(round(min(x))), int(round(y[x.index(min(x))]))]
+                right = [int(round(max(x))), int(round(y[x.index(max(x))]))]
+                landmark_positions = [top, bottom, left, right]
+                self.face2d['all landmark positions'].append(landmark_positions)
+
+                if len(queue_ver) >= n:
+                    ver_ave = np.mean(queue_ver, axis=0)
+
+                    if args.opt == 'sparse':
+                        res = cv_draw_landmark(frame_bgr, ver)
+                        res, pose = viz_pose(res, param_lst, [ver]) 
+                        self.pose['frame'].append(i)
+                        self.pose['time'].append(i/self.video.fps)
+                        self.pose['yaw'].append(pose[0])
+                        self.pose['pitch'].append(pose[1]*-1)
+                        self.pose['roll'].append(pose[2]*-1)   
+                        if self.show == True:
+                            cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
+                            cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
+                            cv2.imshow('EdiHeadyTrack', res)
+                        writer.write(res)
+                        self.tracking_frames.append(cv2.cvtColor(res, cv2.COLOR_BGR2RGB))
+                        if cv2.waitKey(5) & 0xFF == ord('q'):
+                            # self.video.cap.release()
+                            writer.release()
+                            cv2.destroyAllWindows()
+                            progress_bar.close()
+                            print('Face tracking interrupted...')
+                            break
+                    elif args.opt == 'dense':
+                        res = render(frame_bgr, [ver], tddfa.tri, show_flag=False)
+                        res, pose = viz_pose(res, param_lst, [ver]) 
+                        self.pose['frame'].append(i)
+                        self.pose['time'].append(i/self.video.fps)
+                        self.pose['yaw'].append(pose[0])
+                        self.pose['pitch'].append(pose[1]*-1)
+                        self.pose['roll'].append(pose[2]*-1)   
+                        if self.show == True:
+                            cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
+                            cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
+                            cv2.imshow('EdiHeadyTrack', res)
+                        writer.write(res)
+                        self.tracking_frames.append(cv2.cvtColor(res, cv2.COLOR_BGR2RGB))
+                        if cv2.waitKey(5) & 0xFF == ord('q'):
+                            # self.video.cap.release()
+                            writer.release()
+                            cv2.destroyAllWindows()
+                            progress_bar.close()
+                            print('Face tracking interrupted...')
+                            break    
+                    else:
+                        raise ValueError(f'Unknown opt {args.opt}')
+
+            
+            else:
+                # self.video.cap.release()
+                writer.release()
+                cv2.destroyAllWindows()
+                progress_bar.close()
+                print('Face tracking complete...')
+                break
+        
+        print(n_next)
+        
+        for _ in range(n_next):
+            queue_ver.append(ver.copy())
+            queue_frame.append(res.copy())  # the last frame
+
+            ver_ave = np.mean(queue_ver, axis=0)
+
+            if args.opt == 'sparse':
+                img_draw = cv_draw_landmark(queue_frame[n_pre], ver_ave)  # since we use padding
+            elif args.opt == '2d_dense':
+                img_draw = cv_draw_landmark(queue_frame[n_pre], ver_ave, size=1)
+            elif args.opt == 'dense':
+                img_draw = render(queue_frame[n_pre], [ver_ave], tddfa.tri, alpha=0.7)
+            else:
+                raise ValueError(f'Unknown opt {args.opt}')
+
+
+            queue_ver.popleft()
+            queue_frame.popleft()
+        
+        print(f'Dump to {video_wfp}')
         

@@ -155,7 +155,6 @@ def draw_landmarks(img, pts, style='fancy', wfp=None, show_flag=False, **kwargs)
     if show_flag:
         plt.show()
 
-
 def cv_draw_landmark(img_ori, pts, box=None, color=GREEN, size=1):
     img = img_ori.copy()
     n = pts.shape[1]
