@@ -20,39 +20,40 @@ plt.clf()
 def test_plot_property():
     key_times = [0.01, 0.02]
     plt.clf()
-    line = Plot(HEAD).plot_property(xlim=(0, 0.001), 
+    line = Plot(HEAD).plot_property(xlim=(0, 0.1), 
                                     ylim=(-220, 220),
                                     show=False)
     plt.clf()
     line = Plot(HEAD).plot_property(property='velocity', 
-                                    xlim=(0, 0.001), 
+                                    xlim=(0, 0.1), 
                                     ylim=(-220, 220), 
                                     key_times=key_times,
                                     show=False) 
     plt.clf()
     wax9 = Wax9('resources/example_imu.csv', time_offset=-59.335, id='WAX-9')
-    line = Plot(HEAD, wax9).plot_property(xlim=(0, 0.001), 
+    line = Plot(HEAD, wax9).plot_property(xlim=(0, 0.1), 
                                           ylim=(-220, 220), 
                                           show=False)
     plt.clf()
     line = Plot(HEAD).plot_property(property='pose',
-                                    xlim=(0, 0.001), 
+                                    xlim=(0, 0.1), 
                                     ylim=(-220, 220),
                                     show=False)
     plt.clf()
     line = Plot(HEAD).plot_property(property='acceleration',
-                                    xlim=(0, 0.001), 
+                                    xlim=(0, 0.1), 
                                     ylim=(-220, 220),
                                     show=False)
     plt.clf()
-    line = Plot(wax9).plot_property(xlim=(0, 0.001), 
+    line = Plot(wax9).plot_property(xlim=(0, 0.1), 
                                     ylim=(-220, 220),
                                     show=False)
     plt.clf()
 
 def test_plot_summarise():
+    plt.clf()
     wax9 = Wax9('resources/example_imu.csv', time_offset=-59.335, id='WAX-9')
-    plot = Plot(HEAD, wax9).plot_property(xlim=(0, 1),  
-                                    show=False)
+    plot = Plot(HEAD, wax9).plot_property(xlim=(0, 0.1),  
+                                          show=False)
 
     plot.summarise()
