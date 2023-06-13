@@ -7,9 +7,11 @@ from .video import(
 )
 
 
-from .facedetector import(
-    MediaPipe
+from .posedetector import(
+    MediaPipe,
+    TDDFA_V2
 )
+
 
 from .imu import(
     Wax9

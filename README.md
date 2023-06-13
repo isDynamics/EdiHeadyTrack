@@ -35,7 +35,7 @@ Project is created with:
 * Python 3.9.0
 	
 ## Setup
-EdiHeadyTrack is available on PyPI! Install using:
+EdiHeadyTrack is available on [PyPI](https://pypi.org/project/EdiHeadyTrack/)! Install using:
 ```bash
 pip install EdiHeadyTrack
 ```
