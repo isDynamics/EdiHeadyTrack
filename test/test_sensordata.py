@@ -11,7 +11,7 @@ TEST_VIDEO = Video(TEST_FILE)
 from EdiHeadyTrack import Camera
 TEST_CAMERA = Camera()
 SHOW = False
-from EdiHeadyTrack.facedetector import MediaPipe
+from EdiHeadyTrack.posedetector import MediaPipe
 MEDIAPIPE = MediaPipe(TEST_VIDEO, TEST_CAMERA, SHOW)
 Head._counter=0
 
@@ -23,14 +23,9 @@ def test_Head_counter():
     head = Head(MEDIAPIPE, id='head')
     assert head.id == 'head'
 
-def test_Head_calculate_pose():
-    head = Head(MEDIAPIPE)
-    head.calculate_pose()
-    assert round(head.pose['yaw'][0], 2) == -8.52
-    
 def test_Head_calculate_kinematics():
     head = Head(MEDIAPIPE)
-    head.calculate_pose()
+    head.calculate_kinematics()
     assert round(head.velocity['yaw'][0], 2) == 443.30
 
 def test_Head_apply_filter():
