@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/06/13 15:14:59 by taston           ###   ########.fr        #
+#    Updated: 2023/06/20 12:55:48 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ import numpy as np
 from numpy import genfromtxt
 from tqdm import tqdm
 from datetime import datetime
+import time
 
 from EdiHeadyTrack.camera import Camera
 from EdiHeadyTrack.video import Video
@@ -101,7 +102,7 @@ class MediaPipe(PoseDetector):
         run through the tracking procedure using MediaPipe face mesh
     """
     def __init__(self, video=Video(), camera=Camera(), show=True,
-                 staticMode=False, maxFaces=1, refineLandmarks=False, minDetectionCon=0.5, minTrackCon=0.5):
+                 staticMode=False, maxFaces=1, refineLandmarks=True, minDetectionCon=0.5, minTrackCon=0.5):
         """
         Parameters
         ----------
@@ -144,7 +145,11 @@ class MediaPipe(PoseDetector):
         self.key_landmarks = [33, 263, 1, 61, 291, 199]
         self.face3d = []
         self.run()
-        self.calculate_pose()
+        # self.calculate_pose()
+        # offset values
+        self.pose['yaw'] = [val - self.pose['yaw'][0] for val in self.pose['yaw']]
+        self.pose['pitch'] = [val - self.pose['pitch'][0] for val in self.pose['pitch']]
+        self.pose['roll'] = [val - self.pose['roll'][0] for val in self.pose['roll']]
         timestamp = datetime.now().strftime("%H:%M:%S")
         print('-'*120)
         print('{:<100} {:>19}'.format(f'MediaPipe object complete!', timestamp))
@@ -202,12 +207,13 @@ class MediaPipe(PoseDetector):
 
     def find_faces(self, img):
         """Finds faces in a supplied image
-
+        
         Parameters
         ----------
         img : ndarray
             ndarray representing the image in which faces should be found
         """
+        from .TDDFA_v2.utils.pose import viz_pose
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         results = self.faceMesh.process(imgRGB)
         frame_number = int(self.video.cap.get(cv2.CAP_PROP_POS_FRAMES))
@@ -215,7 +221,9 @@ class MediaPipe(PoseDetector):
         # print(time)
         if results.multi_face_landmarks:
             self.face2d['time'].append(time)
+            self.pose['time'].append(time)
             self.face2d['frame'].append(frame_number)
+            self.pose['frame'].append(frame_number)
             landmark_positions=[]
             key_landmark_positions=[]
             for faceLandmarks in results.multi_face_landmarks:
@@ -242,55 +250,71 @@ class MediaPipe(PoseDetector):
 
                 self.face2d['all landmark positions'].append(landmark_positions)
                 self.face2d['key landmark positions'].append(key_landmark_positions)
+                
+                yaw, pitch, roll, p1, p2 = self.calculate_pose(key_landmark_positions)
+                
+                # if self.nose2d:
+                #     nose2d = self.nose2d
+                #     p1 = (int(nose2d[0]), int(nose2d[1]))
+                #     p2 = (int(nose2d[0] - yaw * 2), int(nose2d[1] - pitch * 2))
 
+                # cv2.line(img, p1, p2, (255,0,0), 3)
+                self.pose['yaw'].append(yaw)
+                self.pose['pitch'].append(pitch)
+                self.pose['roll'].append(roll)
+  
+
+                # res, pose = viz_pose(res, param_lst, [key_landmark_positions]) 
+                # self.pose['yaw'].append(pose[0])
+                # self.pose['pitch'].append(pose[1])
+                # self.pose['roll'].append(pose[2])   
+
+                
+        
         self.tracking_frames.append(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         
         return
     
-    def calculate_pose(self):
+    def calculate_pose(self, face2d):
         """Calculates head pose from detected facial landmarks using 
         Perspective-n-Point (PnP) pose computation:
         
         https://docs.opencv.org/4.6.0/d5/d1f/calib3d_solvePnP.html
         """
-        print('Computing head pose from tracking data...')
-        for idx, time in enumerate(self.face2d['time']):
-            # print(time)
-            self.pose['time'].append(time)
-            self.pose['frame'].append(self.face2d['frame'][idx])
-            face2d = self.face2d['key landmark positions'][idx]
-            face2d = np.array(face2d, dtype=np.float64)
-            face3d = np.array(self.face3d, dtype=np.float64)
+        # print('Computing head pose from tracking data...')
+        # for idx, time in enumerate(self.face2d['time']):
+        #     # print(time)
+        #     self.pose['time'].append(time)
+        #     self.pose['frame'].append(self.face2d['frame'][idx])
+        #     face2d = self.face2d['key landmark positions'][idx]
+        face2d = np.array(face2d, dtype=np.float64)
+        face3d = np.array(self.face3d, dtype=np.float64)
 
-            success, rot_vec, trans_vec = cv2.solvePnP(face3d,
-                                                       face2d,
-                                                       self.camera.internal_matrix,
-                                                       self.camera.distortion_matrix,
-                                                       flags=cv2.SOLVEPNP_ITERATIVE)
-            
-            rmat = cv2.Rodrigues(rot_vec)[0]
+        success, rot_vec, trans_vec = cv2.solvePnP(face3d,
+                                                    face2d,
+                                                    self.camera.internal_matrix,
+                                                    self.camera.distortion_matrix,
+                                                    flags=cv2.SOLVEPNP_ITERATIVE)
+        
+        rmat = cv2.Rodrigues(rot_vec)[0]
 
-            P = np.hstack((rmat, np.zeros((3, 1), dtype=np.float64)))
-            eulerAngles =  cv2.decomposeProjectionMatrix(P)[6]
-            yaw = eulerAngles[1, 0]
-            pitch = eulerAngles[0, 0]
-            roll = eulerAngles[2,0]
-            
-            if pitch < 0:
-                pitch = - 180 - pitch
-            elif pitch >= 0: 
-                pitch = 180 - pitch
-            
-            self.pose['yaw'].append(yaw)
-            self.pose['pitch'].append(pitch)
-            self.pose['roll'].append(roll)
-
-            if self.nose2d:
-                nose2d = self.nose2d
-                p1 = (int(nose2d[0]), int(nose2d[1]))
-                p2 = (int(nose2d[0] - yaw * 2), int(nose2d[1] - pitch * 2))
-
-        return
+        P = np.hstack((rmat, np.zeros((3, 1), dtype=np.float64)))
+        eulerAngles =  cv2.decomposeProjectionMatrix(P)[6]
+        yaw = eulerAngles[1, 0]
+        pitch = eulerAngles[0, 0]
+        roll = eulerAngles[2,0]
+        
+        if pitch < 0:
+            pitch = - 180 - pitch
+        elif pitch >= 0: 
+            pitch = 180 - pitch
+        
+        if self.nose2d:
+            nose2d = self.nose2d
+            p1 = (int(nose2d[0]), int(nose2d[1]))
+            p2 = (int(nose2d[0] - yaw * 2), int(nose2d[1] - pitch * 2))
+        
+        return yaw, pitch, roll, p1, p2
     
     def __str__(self):
         return f'MediaPipe Face Detector with video {self.video.filename}'
@@ -364,9 +388,13 @@ class TDDFA_V2(PoseDetector):
             args = parser.parse_args()
             self.run(args)
 
+        # offset values
+        self.pose['yaw'] = [val - self.pose['yaw'][0] for val in self.pose['yaw']]
+        self.pose['pitch'] = [val - self.pose['pitch'][0] for val in self.pose['pitch']]
+        self.pose['roll'] = [val - self.pose['roll'][0] for val in self.pose['roll']]
         timestamp = datetime.now().strftime("%H:%M:%S")
         print('-'*120)
-        print('{:<100} {:>19}'.format(f'MediaPipe object complete!', timestamp))
+        print('{:<100} {:>19}'.format(f'3DDFA_v2 object complete!', timestamp))
         print('-'*120)
         
     
@@ -471,8 +499,8 @@ class TDDFA_V2(PoseDetector):
                     self.pose['frame'].append(i)
                     self.pose['time'].append(i/self.video.fps)
                     self.pose['yaw'].append(pose[0])
-                    self.pose['pitch'].append(pose[1]*-1)
-                    self.pose['roll'].append(pose[2]*-1)   
+                    self.pose['pitch'].append(pose[1])
+                    self.pose['roll'].append(pose[2])   
                     if self.show == True:
                         cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
                         cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
@@ -492,8 +520,8 @@ class TDDFA_V2(PoseDetector):
                     self.pose['frame'].append(i)
                     self.pose['time'].append(i/self.video.fps)
                     self.pose['yaw'].append(pose[0])
-                    self.pose['pitch'].append(pose[1]*-1)
-                    self.pose['roll'].append(pose[2]*-1)   
+                    self.pose['pitch'].append(pose[1])
+                    self.pose['roll'].append(pose[2])   
                     if self.show == True:
                         cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
                         cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
@@ -517,6 +545,8 @@ class TDDFA_V2(PoseDetector):
                 progress_bar.close()
                 print('Face tracking complete...')
                 break
+
+            # time.sleep(0.5)
         
         print(f'Dump to {video_wfp}')
 
@@ -650,8 +680,8 @@ class TDDFA_V2(PoseDetector):
                         self.pose['frame'].append(i)
                         self.pose['time'].append(i/self.video.fps)
                         self.pose['yaw'].append(pose[0])
-                        self.pose['pitch'].append(pose[1]*-1)
-                        self.pose['roll'].append(pose[2]*-1)   
+                        self.pose['pitch'].append(pose[1])
+                        self.pose['roll'].append(pose[2])   
                         if self.show == True:
                             cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
                             cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
@@ -671,8 +701,8 @@ class TDDFA_V2(PoseDetector):
                         self.pose['frame'].append(i)
                         self.pose['time'].append(i/self.video.fps)
                         self.pose['yaw'].append(pose[0])
-                        self.pose['pitch'].append(pose[1]*-1)
-                        self.pose['roll'].append(pose[2]*-1)   
+                        self.pose['pitch'].append(pose[1])
+                        self.pose['roll'].append(pose[2])   
                         if self.show == True:
                             cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
                             cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
@@ -718,6 +748,7 @@ class TDDFA_V2(PoseDetector):
 
             queue_ver.popleft()
             queue_frame.popleft()
+        
         
         print(f'Dump to {video_wfp}')
         

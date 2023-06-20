@@ -6,12 +6,8 @@ opencv_python==4.7.0.72
 pandas==2.0.2
 scipy==1.9.1
 tqdm==4.65.0
-# 3DDFA_v2
 torch
 torchvision
-matplotlib
-numpy
-opencv-python # cv2
 imageio
 imageio-ffmpeg
 pyyaml # yaml
@@ -19,6 +15,5 @@ tqdm
 argparse
 cython
 scikit-image # skimage
-scipy
 onnxruntime
 gradio

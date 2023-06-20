@@ -1,5 +1,7 @@
+# Custom
+pickling/*
+
 # Videos/images
-videos_gitignore/
 data/tracking frames
 *.mp4
 calibration.mp4

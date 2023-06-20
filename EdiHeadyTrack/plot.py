@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/06/13 15:39:39 by taston           ###   ########.fr        #
+#    Updated: 2023/06/16 16:12:49 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,15 +38,20 @@ class Plot:
         plots a time comparison between sensor data
     """
     def __init__(self, *sensors):
-        self.colors = ['k', 'c', 'g']
-        self.linestyles = ['solid', 'dashed', 'dotted']
+        self.colors = ['k', 'c', 'g', 'r', 'o']
+        self.linestyles = ['solid', 'dashed', 'dotted', 'dashdot']
         self.sensors = []
+        self.heads = []
         self.lines = []
         for sensor in sensors:
             if not isinstance(sensor, SensorData):
                 raise TypeError(f'Attempted to plot type {type(sensor)}. Only SensorData objects may be plotted here!')
             else:
                 self.sensors.append(sensor)
+                if isinstance(sensor, Head):
+                    self.heads.append(sensor)
+                
+        # print(self.heads)
 
 
     def plot_property(self, property='velocity', 
@@ -67,24 +72,28 @@ class Plot:
             sensor data objects to be added to plot
         """
         plt.rcParams.update({'font.size': 14})
-        fig = plt.figure('EdiHeadyTrack - Head Data Plotting',figsize=[6,8])    
+        gridspec_kw={'height_ratios': [2, 1, 1, 1]}
+        fig, axs = plt.subplots(4,1,figsize=[6,8], gridspec_kw=gridspec_kw)    
 
         for sensor_idx, sensor in enumerate(self.sensors):
             if hasattr(sensor, property):
                 property_dict = getattr(sensor, property)
-                for ax_idx, key in enumerate(list(property_dict.keys())[1:]):
-
-                    ax = plt.subplot(len(list(property_dict.keys())), 1, ax_idx+2)
-                    ax.grid(color='0.95')
+                if isinstance(sensor, Head) and property=='pose':
+                    start=2
+                else:
+                    start=1
+                for ax_idx, key in enumerate(list(property_dict.keys())[start:]):
+                    # axs[ax_idx+1] = plt.subplot(len(list(property_dict.keys())), 1, ax_idx+1)
+                    axs[ax_idx+1].grid(color='0.95')
                     if property == 'pose':
-                        ax.set_ylabel(fr'$\theta_{{{key}}}$ (deg)')
+                        axs[ax_idx+1].set_ylabel(fr'$\theta_{{{key}}}$ (deg)')
                     elif property == 'velocity':
-                        ax.set_ylabel(fr'$\omega_{{{key}}}$ (deg/s)')
+                        axs[ax_idx+1].set_ylabel(fr'$\omega_{{{key}}}$ (deg/s)')
                     elif property =='acceleration':
-                        ax.set_ylabel(fr'$\alpha_{{{key}}}$ (deg/s$^2$)')
+                        axs[ax_idx+1].set_ylabel(fr'$\alpha_{{{key}}}$ (deg/s$^2$)')
 
                     if xlim:
-                        ax.set_xlim(xlim)
+                        axs[ax_idx+1].set_xlim(xlim)
 
                     lims = []
 
@@ -92,17 +101,18 @@ class Plot:
                     y_data = property_dict[key]
 
                     # cropping data
-                    for lim in xlim:
-                        for time_idx, time in enumerate(x_data):
-                            if time > lim:
-                                lims.append(time_idx)
-                                break
-                    
-                    x_data = x_data[lims[0]:lims[1]]
-                    y_data = y_data[lims[0]:lims[1]]
+                    if xlim:
+                        for lim in xlim:
+                            for time_idx, time in enumerate(x_data):
+                                if time > lim:
+                                    lims.append(time_idx)
+                                    break
+                        
+                        x_data = x_data[lims[0]:lims[1]]
+                        y_data = y_data[lims[0]:lims[1]]
 
                     # print(f'plotting line with color: {self.colors[sensor_idx]}')
-                    line, = ax.plot(x_data,
+                    line, = axs[ax_idx+1].plot(x_data,
                                     y_data,
                                     label=f'{sensor.id}',
                                     color=self.colors[sensor_idx],
@@ -117,59 +127,60 @@ class Plot:
                                        'values':    y_data})
                     
                     for time in key_times:
-                        ax.axvline(x=time, color='green', ls=':')
+                        axs[ax_idx+1].axvline(x=time, color='green', ls=':')
                         
-                    if ax_idx + 2 != len(list(property_dict.keys())):
-                        plt.setp(ax.get_xticklabels(), visible=False)
+                    if ax_idx != 2:
+                        plt.setp(axs[ax_idx+1].get_xticklabels(), visible=False)
                     else:
-                        ax.set_xlabel(r'Time (s)')
+                        axs[ax_idx+1].set_xlabel(r'Time (s)')
                     
-                    if ax_idx + 2 == 3: 
-                        handles, labels = ax.get_legend_handles_labels()
-                        ax.legend(handles, labels, bbox_to_anchor=(1.0, 0.85), loc=2)
+                    if ax_idx == 1: 
+                        handles, labels = axs[ax_idx+1].get_legend_handles_labels()
+                        axs[ax_idx+1].legend(handles, labels, bbox_to_anchor=(1.0, 0.85), loc=2)
             else:
                 print(f'{sensor} does NOT have property {property}')
                 
-        ax1 = plt.subplot(411, sharex=ax)
+        axs[0] = plt.subplot(411, sharex=axs[1])
         for time in key_times:
-            ax1.axvline(x=time, color='green', ls=':')
-        plt.setp(ax1.get_xticklabels(), visible=False)
-        plt.setp(ax1.get_yticklabels(), visible=False)
+            axs[0].axvline(x=time, color='green', ls=':')
+        plt.setp(axs[0].get_xticklabels(), visible=False)
+        plt.setp(axs[0].get_yticklabels(), visible=False)
 
         if key_times:
-            for sensor in self.sensors:
-                if isinstance(sensor, Head):
-                    for idx, frame in enumerate(key_frames):
-                        img = sensor.posedetector.tracking_frames[frame]
+            for sensor_idx, sensor in enumerate(self.heads):
+                for idx, frame in enumerate(key_frames):
+                    img = sensor.posedetector.tracking_frames[frame]
 
-                        frame_index = sensor.posedetector.pose['frame'].index(frame)
-                        x_list = [pos[0] for pos in sensor.posedetector.face2d['all landmark positions'][frame_index]]
-                        y_list = [pos[1] for pos in sensor.posedetector.face2d['all landmark positions'][frame_index]]
-                        # print(x_list)
-                        # print(y_list)
-                        top_bound = max(0, min(y_list[:]) - 200)
-                        bottom_bound = min(sensor.posedetector.video.height, max(y_list[:]) + 200)
-                        left_bound = max(0, min(x_list[:]) - 200)
-                        right_bound = min(sensor.posedetector.video.width, max(x_list[:]) + 200)
-                        
-                        img = img[top_bound:bottom_bound, left_bound:right_bound, :]
+                    frame_index = sensor.posedetector.pose['frame'].index(frame)
+                    x_list = [pos[0] for pos in sensor.posedetector.face2d['all landmark positions'][frame_index]]
+                    y_list = [pos[1] for pos in sensor.posedetector.face2d['all landmark positions'][frame_index]]
+                    # print(x_list)
+                    # print(y_list)
+                    top_bound = max(0, min(y_list[:]) - 200)
+                    bottom_bound = min(sensor.posedetector.video.height, max(y_list[:]) + 200)
+                    left_bound = max(0, min(x_list[:]) - 200)
+                    right_bound = min(sensor.posedetector.video.width, max(x_list[:]) + 200)
+                    
+                    img = img[top_bound:bottom_bound, left_bound:right_bound, :]
 
-                        imagebox = OffsetImage(img, zoom=0.08)
-                        imagebox.image.axes = ax1
+                    imagebox = OffsetImage(img, zoom=0.04)
+                    imagebox.image.axes = axs[0]
+                    
+                    ab = AnnotationBbox(imagebox, [key_times[idx],0.9-0.8*sensor_idx/(len(self.heads)-1)],
+                                        xybox=(1,  1),
+                                        xycoords='data',
+                                        boxcoords="offset points",
+                                        pad=0.01,
+                                        bboxprops =dict(edgecolor=self.colors[sensor_idx])
+                                        )
 
-                        ab = AnnotationBbox(imagebox, [key_times[idx],0.5],
-                                            xybox=(1, 1),
-                                            xycoords='data',
-                                            boxcoords="offset points",
-                                            pad=0.01,
-                                            bboxprops =dict(edgecolor='white')
-                                            )
-
-                        ax1.add_artist(ab)
+                    axs[0].add_artist(ab)
         
+
         plt.savefig('resources/comparison.png', bbox_inches='tight')
         if show == True:
             plt.show()
+            plt.tight_layout
         
         return self
 
@@ -179,7 +190,6 @@ class Plot:
         Plot object.
         '''
         sensor_prev = None
-        print(self.lines)
         for line in self.lines:
             sensor = line['sensor']
 
