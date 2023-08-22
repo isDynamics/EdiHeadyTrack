@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/06/20 14:54:52 by taston           ###   ########.fr        #
+#    Updated: 2023/08/22 13:08:53 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -562,8 +562,8 @@ class TDDFA_V2(PoseDetector):
         https://github.com/cleardusk/3DDFA_V2
 
         """
-
-        from .TDDFA_v2.utils.render import render
+        if self.show == True:
+            from .TDDFA_v2.utils.render import render
         from .TDDFA_v2.utils.pose import viz_pose, plot_pose_box
         from .TDDFA_v2.utils.functions import cv_draw_landmark, get_suffix
         
