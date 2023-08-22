@@ -39,7 +39,7 @@ jobs:
       shell: bash
     - name: Test with pytest
       run: |
-        pytest
+        pytest 
     - name: Generate coverage report
       run: |
         pip install pytest
