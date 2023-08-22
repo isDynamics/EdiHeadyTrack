@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/06/16 16:12:49 by taston           ###   ########.fr        #
+#    Updated: 2023/08/22 10:11:42 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -163,21 +163,23 @@ class Plot:
                     
                     img = img[top_bound:bottom_bound, left_bound:right_bound, :]
 
-                    imagebox = OffsetImage(img, zoom=0.04)
+                    imagebox = OffsetImage(img, zoom=0.08)
                     imagebox.image.axes = axs[0]
                     
-                    ab = AnnotationBbox(imagebox, [key_times[idx],0.9-0.8*sensor_idx/(len(self.heads)-1)],
-                                        xybox=(1,  1),
-                                        xycoords='data',
-                                        boxcoords="offset points",
-                                        pad=0.01,
-                                        bboxprops =dict(edgecolor=self.colors[sensor_idx])
-                                        )
+                    if len(self.heads) != 1:
+                        ab = AnnotationBbox(imagebox, [key_times[idx],0.7-0.4*sensor_idx/(len(self.heads)-1)],
+                                            xybox=(1,  1),
+                                            xycoords='data',
+                                            boxcoords="offset points",
+                                            pad=0.01,
+                                            bboxprops =dict(edgecolor=self.colors[sensor_idx+1])
+                                            )
 
-                    axs[0].add_artist(ab)
+                        axs[0].add_artist(ab)
         
 
         plt.savefig('resources/comparison.png', bbox_inches='tight')
+        plt.savefig('resources/comparison.svg', bbox_inches='tight')
         if show == True:
             plt.show()
             plt.tight_layout

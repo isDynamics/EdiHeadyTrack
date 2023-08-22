@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/06/20 12:55:48 by taston           ###   ########.fr        #
+#    Updated: 2023/06/20 14:54:52 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -499,8 +499,8 @@ class TDDFA_V2(PoseDetector):
                     self.pose['frame'].append(i)
                     self.pose['time'].append(i/self.video.fps)
                     self.pose['yaw'].append(pose[0])
-                    self.pose['pitch'].append(pose[1])
-                    self.pose['roll'].append(pose[2])   
+                    self.pose['pitch'].append(pose[1]*-1)
+                    self.pose['roll'].append(pose[2]*-1)   
                     if self.show == True:
                         cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
                         cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
@@ -520,8 +520,8 @@ class TDDFA_V2(PoseDetector):
                     self.pose['frame'].append(i)
                     self.pose['time'].append(i/self.video.fps)
                     self.pose['yaw'].append(pose[0])
-                    self.pose['pitch'].append(pose[1])
-                    self.pose['roll'].append(pose[2])   
+                    self.pose['pitch'].append(pose[1]*-1)
+                    self.pose['roll'].append(pose[2]*-1)   
                     if self.show == True:
                         cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
                         cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
@@ -680,8 +680,8 @@ class TDDFA_V2(PoseDetector):
                         self.pose['frame'].append(i)
                         self.pose['time'].append(i/self.video.fps)
                         self.pose['yaw'].append(pose[0])
-                        self.pose['pitch'].append(pose[1])
-                        self.pose['roll'].append(pose[2])   
+                        self.pose['pitch'].append(pose[1]*-1)
+                        self.pose['roll'].append(pose[2]*-1)   
                         if self.show == True:
                             cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
                             cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))
@@ -701,8 +701,8 @@ class TDDFA_V2(PoseDetector):
                         self.pose['frame'].append(i)
                         self.pose['time'].append(i/self.video.fps)
                         self.pose['yaw'].append(pose[0])
-                        self.pose['pitch'].append(pose[1])
-                        self.pose['roll'].append(pose[2])   
+                        self.pose['pitch'].append(pose[1]*-1)
+                        self.pose['roll'].append(pose[2]*-1)   
                         if self.show == True:
                             cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
                             cv2.resizeWindow("EdiHeadyTrack", int(self.video.width/2), int(self.video.height/2))

@@ -19,10 +19,11 @@ plt.clf()
 
 def test_plot_property():
     key_times = [0.01, 0.02]
+    # print(HEAD.pose)
     plt.clf()
     line = Plot(HEAD).plot_property(xlim=(0, 0.1), 
                                     ylim=(-220, 220),
-                                    show=False)
+                                    show=True)
     plt.clf()
     line = Plot(HEAD).plot_property(property='velocity', 
                                     xlim=(0, 0.1), 
