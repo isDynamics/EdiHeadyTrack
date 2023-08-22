@@ -36,6 +36,7 @@ jobs:
       run: |
         cd EdiHeadyTrack/TDDFA_v2
         sh ./build.sh
+        cd ../..
         pytest 
     - name: Generate coverage report
       run: |
