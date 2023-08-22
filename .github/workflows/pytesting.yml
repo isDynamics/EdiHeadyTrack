@@ -34,7 +34,9 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest
+        cd EdiHeadyTrack/TDDFA_v2
+        sh ./build.sh
+        pytest 
     - name: Generate coverage report
       run: |
         pip install pytest
