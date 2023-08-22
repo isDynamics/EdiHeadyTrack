@@ -23,7 +23,7 @@ def test_plot_property():
     plt.clf()
     line = Plot(HEAD).plot_property(xlim=(0, 0.1), 
                                     ylim=(-220, 220),
-                                    show=True)
+                                    show=False)
     plt.clf()
     line = Plot(HEAD).plot_property(property='velocity', 
                                     xlim=(0, 0.1), 
