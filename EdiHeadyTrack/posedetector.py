@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/08/22 13:08:53 by taston           ###   ########.fr        #
+#    Updated: 2023/08/22 13:17:30 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -409,10 +409,11 @@ class TDDFA_V2(PoseDetector):
         # import EdiHeadyTrack.TDDFA_v2 as TDDFA_v2
         # from .TDDFA_v2.FaceBoxes import FaceBoxes
         # from .TDDFA_v2.TDDFA import TDDFA
+    
         from .TDDFA_v2.utils.render import render
         from .TDDFA_v2.utils.pose import viz_pose, plot_pose_box
         from .TDDFA_v2.utils.functions import cv_draw_landmark, get_suffix
-        
+    
         import os 
         import imageio
         from tqdm import tqdm
@@ -562,8 +563,8 @@ class TDDFA_V2(PoseDetector):
         https://github.com/cleardusk/3DDFA_V2
 
         """
-        if self.show == True:
-            from .TDDFA_v2.utils.render import render
+    
+        from .TDDFA_v2.utils.render import render
         from .TDDFA_v2.utils.pose import viz_pose, plot_pose_box
         from .TDDFA_v2.utils.functions import cv_draw_landmark, get_suffix
         

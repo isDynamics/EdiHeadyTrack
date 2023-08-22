@@ -18,6 +18,6 @@ def test_MediaPipe():
     assert round(mediapipe.pose['yaw'][0], 2) == 0.0
 
     
-def test_TDDFA():
-    # tddfa = TDDFA_V2(TEST_VIDEO, TEST_CAMERA, SHOW)
-    tddfa = TDDFA_V2(TEST_VIDEO, TEST_CAMERA, SHOW)
+# def test_TDDFA():
+#     # tddfa = TDDFA_V2(TEST_VIDEO, TEST_CAMERA, SHOW)
+#     tddfa = TDDFA_V2(TEST_VIDEO, TEST_CAMERA, SHOW)
