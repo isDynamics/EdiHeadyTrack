@@ -18,3 +18,4 @@ scikit-image # skimage
 onnxruntime
 gradio
 nbsphinx
+sphinx_mdinclude
