@@ -1,4 +1,4 @@
-from EdiHeadyTrack.posedetector import PoseDetector, MediaPipe
+from EdiHeadyTrack.posedetector import PoseDetector, MediaPipe, TDDFA_V2
 
 TEST_FILE = 'test/resources/testvidshort.mp4'
 from EdiHeadyTrack import Video
@@ -18,4 +18,5 @@ def test_MediaPipe():
     assert round(mediapipe.pose['yaw'][0], 2) == 0.0
 
     
-    
+def test_TDDFA():
+    tddfa = TDDFA_V2(TEST_VIDEO, TEST_CAMERA, SHOW)
