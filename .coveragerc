@@ -1,2 +1,3 @@
 [run]
 omit = EdiHeadyTrack/TDDFA_v2/*
+omit = EdiHeadyTrack/TDDFA_v2/

@@ -20,4 +20,4 @@ def test_MediaPipe():
     
 def test_TDDFA():
     # tddfa = TDDFA_V2(TEST_VIDEO, TEST_CAMERA, SHOW)
-    tddfa = TDDFA_V2(video=TEST_VIDEO, camera=TEST_CAMERA, show=SHOW)
+    tddfa = TDDFA_V2(TEST_VIDEO, TEST_CAMERA, SHOW)
