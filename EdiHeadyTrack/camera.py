@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:41:23 by taston            #+#    #+#              #
-#    Updated: 2023/05/30 11:21:02 by taston           ###   ########.fr        #
+#    Updated: 2023/09/01 13:41:21 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,9 +48,10 @@ class Camera:
         ...
         """
         
-        width = 1920
-        height = 1080
+        width = 1280
+        height = 720
         self.focal_length = height * 1.28
+        # self.focal_length = 5000
         self.internal_matrix = np.array([[self.focal_length, 0, width/2],
                                           [0, self.focal_length, height/2],
                                           [0, 0, 1]])
@@ -76,6 +77,8 @@ class Camera:
         self.calibrator = Calibrator(checkerboard, self.video, show)
         self.calibrated = True
 
+        self.internal_matrix, self.distortion_matrix = self.calibrator.matrix, self.calibrator.distortion
+        
         return self
     
 

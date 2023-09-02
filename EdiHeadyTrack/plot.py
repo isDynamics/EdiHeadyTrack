@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/08/22 10:11:42 by taston           ###   ########.fr        #
+#    Updated: 2023/09/01 14:51:54 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ from .sensordata import *
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import (TextArea, DrawingArea, OffsetImage,
                                   AnnotationBbox)
+import matplotlib.colors as mcolors
 
 class Plot:
     """
@@ -38,7 +39,7 @@ class Plot:
         plots a time comparison between sensor data
     """
     def __init__(self, *sensors):
-        self.colors = ['k', 'c', 'g', 'r', 'o']
+        self.colors = ['k', 'c', 'orange', 'r', 'g']
         self.linestyles = ['solid', 'dashed', 'dotted', 'dashdot']
         self.sensors = []
         self.heads = []
@@ -94,7 +95,8 @@ class Plot:
 
                     if xlim:
                         axs[ax_idx+1].set_xlim(xlim)
-
+                    if ylim:
+                        axs[ax_idx+1].set_ylim(ylim)
                     lims = []
 
                     x_data = property_dict['time']
@@ -194,16 +196,15 @@ class Plot:
         sensor_prev = None
         for line in self.lines:
             sensor = line['sensor']
-
             if sensor != sensor_prev:
                 print('-'*46)
                 print(f'{sensor} plot summary')
                 print('-'*46)
                 print('{:<30} {:>15}'.format(line['property'], 
-                                             round(max(abs(line['values'])), 2)))
+                                             round(abs(max(line['values'], key=abs)), 2)))
             else:
                 print('{:<30} {:>15}'.format(line['property'], 
-                                             round(max(abs(line['values'])), 2)))
+                                             round(abs(max(line['values'], key=abs)), 2)))
             
             sensor_prev = sensor
         

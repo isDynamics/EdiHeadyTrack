@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/08/22 13:17:30 by taston           ###   ########.fr        #
+#    Updated: 2023/08/31 15:52:07 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -309,6 +309,9 @@ class MediaPipe(PoseDetector):
         elif pitch >= 0: 
             pitch = 180 - pitch
         
+        yaw *= -1
+        pitch *= -1
+        
         if self.nose2d:
             nose2d = self.nose2d
             p1 = (int(nose2d[0]), int(nose2d[1]))
@@ -499,8 +502,8 @@ class TDDFA_V2(PoseDetector):
                     res, pose = viz_pose(res, param_lst, [ver]) 
                     self.pose['frame'].append(i)
                     self.pose['time'].append(i/self.video.fps)
-                    self.pose['yaw'].append(pose[0])
-                    self.pose['pitch'].append(pose[1]*-1)
+                    self.pose['yaw'].append(pose[0]*-1)
+                    self.pose['pitch'].append(pose[1])
                     self.pose['roll'].append(pose[2]*-1)   
                     if self.show == True:
                         cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
@@ -520,8 +523,8 @@ class TDDFA_V2(PoseDetector):
                     res, pose = viz_pose(res, param_lst, [ver]) 
                     self.pose['frame'].append(i)
                     self.pose['time'].append(i/self.video.fps)
-                    self.pose['yaw'].append(pose[0])
-                    self.pose['pitch'].append(pose[1]*-1)
+                    self.pose['yaw'].append(pose[0]*-1)
+                    self.pose['pitch'].append(pose[1])
                     self.pose['roll'].append(pose[2]*-1)   
                     if self.show == True:
                         cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
@@ -680,8 +683,8 @@ class TDDFA_V2(PoseDetector):
                         res, pose = viz_pose(res, param_lst, [ver]) 
                         self.pose['frame'].append(i)
                         self.pose['time'].append(i/self.video.fps)
-                        self.pose['yaw'].append(pose[0])
-                        self.pose['pitch'].append(pose[1]*-1)
+                        self.pose['yaw'].append(pose[0]*-1)
+                        self.pose['pitch'].append(pose[1])
                         self.pose['roll'].append(pose[2]*-1)   
                         if self.show == True:
                             cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)
@@ -701,8 +704,8 @@ class TDDFA_V2(PoseDetector):
                         res, pose = viz_pose(res, param_lst, [ver]) 
                         self.pose['frame'].append(i)
                         self.pose['time'].append(i/self.video.fps)
-                        self.pose['yaw'].append(pose[0])
-                        self.pose['pitch'].append(pose[1]*-1)
+                        self.pose['yaw'].append(pose[0]*-1)
+                        self.pose['pitch'].append(pose[1])
                         self.pose['roll'].append(pose[2]*-1)   
                         if self.show == True:
                             cv2.namedWindow("EdiHeadyTrack", cv2.WINDOW_NORMAL)

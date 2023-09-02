@@ -1,5 +1,6 @@
 # Custom
 pickling/*
+phantom/*
 
 # Videos/images
 data/tracking frames
@@ -10,6 +11,7 @@ camera_distortion.csv
 camera_matrix.csv
 apitoken.txt
 testing.py
+!resources/high_speed_videos/*.mp4
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

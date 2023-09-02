@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:35:24 by taston            #+#    #+#              #
-#    Updated: 2023/06/02 14:05:35 by taston           ###   ########.fr        #
+#    Updated: 2023/09/01 11:33:29 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -173,3 +173,29 @@ class IMU(SensorData):
             self.id = id
         else:
             self.id = IMU._counter
+
+    def apply_filter(self, filter=Filter()):
+        """Applies filter to sensor data and updates
+        
+        Parameters
+        ----------
+        filter : Filter, optional
+            Filter object used to filter data (default Filter())
+
+        Returns
+        -------
+        self
+        """
+        # print('Filtering data...')
+        self.filter = filter
+        data = pd.DataFrame.from_dict(self.velocity)
+        # print(data)
+        properties = ['yaw', 'pitch', 'roll']
+        for property in properties:
+            signal = np.array(data[property])
+            filtered_signal = self.filter.apply(signal)
+            self.velocity[property] = list(filtered_signal)
+        # self.velocity['time'] = self.velocity['time'][~np.isnan(signal)]
+        # print(signal)
+        # print(filtered_signal)
+        return self

@@ -43,7 +43,8 @@ class Wax9(IMU):
         data = pd.read_csv(self.filename)
         data.columns = self.columns
         data['adjusted time'] = data['sample time'] - data['sample time'][0] + self.time_offset
-
+        data = data.dropna()
+        import numpy as np
         # Velocity
         self.velocity['time'] = data['adjusted time']
         self.velocity['yaw'] = data['gyroX']
