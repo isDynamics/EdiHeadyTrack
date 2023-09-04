@@ -2,12 +2,12 @@
 
 from . import _init_paths
 import numpy as np
-import Sim3DR_Cython
+# import Sim3DR_Cython
 
 
 def get_normal(vertices, triangles):
     normal = np.zeros_like(vertices, dtype=np.float32)
-    Sim3DR_Cython.get_normal(normal, vertices, triangles, vertices.shape[0], triangles.shape[0])
+    # Sim3DR_Cython.get_normal(normal, vertices, triangles, vertices.shape[0], triangles.shape[0])
     return normal
 
 
@@ -24,6 +24,6 @@ def rasterize(vertices, triangles, colors, bg=None,
 
     if colors.dtype != np.float32:
         colors = colors.astype(np.float32)
-    Sim3DR_Cython.rasterize(bg, vertices, triangles, colors, buffer, triangles.shape[0], height, width, channel,
-                            reverse=reverse)
+    # Sim3DR_Cython.rasterize(bg, vertices, triangles, colors, buffer, triangles.shape[0], height, width, channel,
+                            # reverse=reverse)
     return bg

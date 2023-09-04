@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/10 16:43:13 by taston            #+#    #+#              #
-#    Updated: 2023/08/31 15:52:07 by taston           ###   ########.fr        #
+#    Updated: 2023/09/04 10:54:07 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -372,6 +372,28 @@ class TDDFA_V2(PoseDetector):
         import os.path as osp
         parser = argparse.ArgumentParser(description='The demo of video of 3DDFA_V2')
         self.current_path = osp.dirname(osp.abspath(__file__))
+
+        # Dummy arguments to avoid ipykernel errors
+        # parser.add_argument(
+        #     "-i", "--ip", help="a dummy argument to fool ipython", default="1")
+        # parser.add_argument(
+        #     "-s", "--stdin", help="a dummy argument to fool ipython", default="1")
+        # parser.add_argument(
+        #     "-c", "--control", help="a dummy argument to fool ipython", default="1")
+        # parser.add_argument(
+        #     "-b", "--hb", help="a dummy argument to fool ipython", default="1")
+        # parser.add_argument(
+        #     "-K", "--Session.key", help="a dummy argument to fool ipython", default="1")
+        # parser.add_argument(
+        #     "-S", "--Session.signature_scheme", help="a dummy argument to fool ipython", default="1")
+        # parser.add_argument(
+        #     "-l", "--shell", help="a dummy argument to fool ipython", default="1")
+        # parser.add_argument(
+        #     "-t", "--transport", help="a dummy argument to fool ipython", default="1")
+        # parser.add_argument(
+        #     "-o", "--iopub", help="a dummy argument to fool ipython", default="1")
+        
+        # Actual arguments
         parser.add_argument('-c', '--config', type=str, default=f'{self.current_path}/TDDFA_v2/configs/mb1_120x120.yml')
         parser.add_argument('-f', '--video_fp', type=str, default=self.video.filename)
         parser.add_argument('-m', '--mode', default='cpu', type=str, help='gpu or cpu mode')
@@ -385,10 +407,11 @@ class TDDFA_V2(PoseDetector):
             parser.add_argument('-n_next', default=5, type=int, help='the next frames of smoothing')
             parser.add_argument('-s', '--start', default=-1, type=int, help='the started frames')
             parser.add_argument('-e', '--end', default=-1, type=int, help='the end frame')
-            args = parser.parse_args()
+            args = parser.parse_args(args=[])
+            print(args)
             self.run_smooth(args)
         else:
-            args = parser.parse_args()
+            args = parser.parse_args(args=[])
             self.run(args)
 
         # offset values
@@ -435,7 +458,7 @@ class TDDFA_V2(PoseDetector):
         # Given a video path
         fn = args.video_fp.split('/')[-1]
         reader = imageio.get_reader(args.video_fp)
-
+        
         fps = reader.get_meta_data()['fps']
 
         suffix = get_suffix(args.video_fp)
