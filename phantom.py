@@ -5,7 +5,7 @@ filter_wax9 = eht.Filter().low_pass_butterworth(fs=2000, lowcut=200, order=4)
 # d0_2
 camera = eht.Camera()
 tracking_video = eht.Video(filename='phantom/1. Phantom videos/d0_2.mp4')
-# mediapipe = eht.MediaPipe(video=tracking_video, camera=camera, show=False, refineLandmarks=False)
+mediapipe = eht.MediaPipe(video=tracking_video, camera=camera, show=False, refineLandmarks=False)
 tddfa = eht.TDDFA_V2(video=tracking_video, camera=camera, show=True)
 filter = eht.Filter().low_pass_butterworth(fs=24000, lowcut=200, order=4)
 head_MP = eht.Head(posedetector=mediapipe, id='MP').apply_filter(filter)
