@@ -1,11 +1,11 @@
-![Logo](https://raw.githubusercontent.com/isdynamics/ediheadytrack/master/resources/logo_main.png#gh-light-mode-only)
+![Logo](https://raw.githubusercontent.com/isdynamics/ediheadytrack/master/resources/logo_main.png)
 
 [![Version](https://img.shields.io/pypi/v/EdiHeadyTrack)](https://pypi.org/project/EdiHeadyTrack/)
 [![License](https://img.shields.io/github/license/isDynamics/EdiHeadyTrack)](https://github.com/isDynamics/EdiHeadyTrack/blob/master/LICENSE)
 [![Build Status - GitHub](https://github.com/isDynamics/EdiHeadyTrack/workflows/pytesting/badge.svg)](https://github.com/isDynamics/EdiHeadyTrack/actions/workflows/pytesting.yml)
 [![codecov](https://codecov.io/gh/isDynamics/EdiHeadyTrack/branch/master/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/isDynamics/EdiHeadyTrack)
 <!-- [![Documentation Status](https://readthedocs.org/projects/ediheadytrack/badge/?version=latest)](https://ediheadytrack.readthedocs.io/en/latest/?badge=latest) -->
-# EdiHeadyTrack
+<!-- # EdiHeadyTrack -->
 
 ## Contributors 
 
