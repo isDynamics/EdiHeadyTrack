@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/09/10 23:27:23 by taston           ###   ########.fr        #
+#    Updated: 2023/09/12 17:08:21 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,8 +72,9 @@ class Plot:
         *sensors : SensorData
             sensor data objects to be added to plot
         """
-        plt.rcParams.update({'font.size': 14, "text.usetex": True, "font.family": "serif"})
+        # plt.rcParams.update({'font.size': 14, "text.usetex": True, "font.family": "serif"})
         # plt.rcParams.update({'mathtext.fontset': 'cm'})
+        plt.rcParams.update({'font.size': 14})
         gridspec_kw={'height_ratios': [2, 1, 1, 1]}
         fig, axs = plt.subplots(4,1,figsize=[6,8], gridspec_kw=gridspec_kw)    
 

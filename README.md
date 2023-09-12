@@ -1,4 +1,4 @@
-![Logo](https://raw.githubusercontent.com/isdynamics/ediheadytrack/master/resources/logo_main.png)
+![Logo](https://raw.githubusercontent.com/isdynamics/ediheadytrack/master/resources/logo_main.png=250x)
 
 [![Version](https://img.shields.io/pypi/v/EdiHeadyTrack)](https://pypi.org/project/EdiHeadyTrack/)
 [![License](https://img.shields.io/github/license/isDynamics/EdiHeadyTrack)](https://github.com/isDynamics/EdiHeadyTrack/blob/master/LICENSE)
