@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/09/12 17:08:21 by taston           ###   ########.fr        #
+#    Updated: 2023/10/18 12:07:43 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -176,7 +176,7 @@ class Plot:
                                             xycoords='data',
                                             boxcoords="offset points",
                                             pad=0.01,
-                                            bboxprops =dict(edgecolor=self.colors[sensor_idx+1])
+                                            bboxprops =dict(edgecolor=self.colors[sensor_idx])
                                             )
 
                         axs[0].add_artist(ab)
