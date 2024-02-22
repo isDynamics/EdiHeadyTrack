@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:35:24 by taston            #+#    #+#              #
-#    Updated: 2023/09/01 11:33:29 by taston           ###   ########.fr        #
+#    Updated: 2024/02/22 14:24:12 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,9 @@ class SensorData:
                              'yaw':     [],
                              'pitch':   [],
                              'roll':    []}
-        
+    
+    
+
 
 class Head(SensorData):
     """
@@ -121,7 +123,6 @@ class Head(SensorData):
         
         return self
     
-
     def calculate_kinematics(self):
         """
         Calculates kinematic data from pose time history
@@ -136,7 +137,23 @@ class Head(SensorData):
             self.acceleration[key] = np.diff(np.array(self.velocity[key])) / np.diff(np.array(self.velocity['time']))
 
         return self
+    
+    def to_csv(self):
+        """
+        Saves current time-series of pose, velocity and acceleration
+        data to cs
+        """
+        # Save pose data to CSV
+        pose_df = pd.DataFrame.from_dict(self.posedetector.pose)
+        pose_df.to_csv(f"resources/head_pose_{self.id}.csv", index=False)
 
+        # Save velocity data to CSV
+        velocity_df = pd.DataFrame.from_dict(self.velocity)
+        velocity_df.to_csv(f"resources/head_velocity_{self.id}.csv", index=False)
+
+        # Save acceleration data to CSV
+        acceleration_df = pd.DataFrame.from_dict(self.acceleration)
+        acceleration_df.to_csv(f"resources/head_acceleration_{self.id}.csv", index=False)
 
 class IMU(SensorData):
     """
