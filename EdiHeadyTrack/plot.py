@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2023/10/18 12:07:43 by taston           ###   ########.fr        #
+#    Updated: 2024/02/22 14:10:38 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -170,7 +170,16 @@ class Plot:
                     imagebox = OffsetImage(img, zoom=0.08)
                     imagebox.image.axes = axs[0]
                     
-                    if len(self.heads) != 1:
+                    if len(self.heads) == 1:
+                        ab = AnnotationBbox(imagebox, [key_times[idx],0.5],
+                                            xybox=(1,  1),
+                                            xycoords='data',
+                                            boxcoords="offset points",
+                                            pad=0.01,
+                                            bboxprops =dict(edgecolor=self.colors[sensor_idx])
+                                            )
+                        axs[0].add_artist(ab)
+                    else:
                         ab = AnnotationBbox(imagebox, [key_times[idx],0.7-0.4*sensor_idx/(len(self.heads)-1)],
                                             xybox=(1,  1),
                                             xycoords='data',
@@ -178,7 +187,6 @@ class Plot:
                                             pad=0.01,
                                             bboxprops =dict(edgecolor=self.colors[sensor_idx])
                                             )
-
                         axs[0].add_artist(ab)
         
 
