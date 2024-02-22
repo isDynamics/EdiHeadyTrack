@@ -11,6 +11,7 @@ camera_distortion.csv
 camera_matrix.csv
 apitoken.txt
 testing.py
+tom_curry.py
 phantom.py
 !resources/high_speed_videos/*.mp4
 
