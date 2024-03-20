@@ -60,6 +60,14 @@ def matrix2angle(R):
         y = atan2(R[2, 1] / cos(x), R[2, 2] / cos(x))
         z = atan2(R[1, 0] / cos(x), R[0, 0] / cos(x))
 
+
+    # eulerAngles =  cv2.decomposeProjectionMatrix(R)[6]
+    # yaw = eulerAngles[1, 0]
+    # pitch = eulerAngles[0, 0]
+    # roll = eulerAngles[2,0]
+
+    # print(f'Yaw 1: {x}, Yaw 2: {yaw}')
+
     return x, y, z
 
 
@@ -128,7 +136,7 @@ def viz_pose(img, param_lst, ver_lst, show_flag=False, wfp=None):
     for param, ver in zip(param_lst, ver_lst):
         P, pose = calc_pose(param)
         img = plot_pose_box(img, P, ver)
-        # print(P[:, :3])
+        # print(P)
         # print(f'yaw: {pose[0]:.1f}, pitch: {pose[1]:.1f}, roll: {pose[2]:.1f}')
 
     if wfp is not None:

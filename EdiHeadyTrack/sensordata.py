@@ -6,7 +6,7 @@
 #    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/25 15:35:24 by taston            #+#    #+#              #
-#    Updated: 2024/02/22 14:24:12 by taston           ###   ########.fr        #
+#    Updated: 2024/03/20 16:42:58 by taston           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,11 +29,13 @@ class SensorData:
         time history of rotational accelerations
     """
     def __init__(self):
-        self.velocity = {'time':    [],
+        self.velocity = {'frame':   [],
+                         'time':    [],
                          'yaw':     [],
                          'pitch':   [],
                          'roll':    []}
-        self.acceleration = {'time':    [],
+        self.acceleration = {'frame':   [],
+                             'time':    [],
                              'yaw':     [],
                              'pitch':   [],
                              'roll':    []}
@@ -128,8 +130,9 @@ class Head(SensorData):
         Calculates kinematic data from pose time history
         """
 
-
+        self.velocity['frame'] = self.posedetector.pose['frame'][1:]
         self.velocity['time'] = self.posedetector.pose['time'][1:]
+        self.acceleration['frame'] = self.posedetector.pose['frame'][2:]
         self.acceleration['time'] = self.posedetector.pose['time'][2:]
 
         for key in list(self.posedetector.pose.keys())[2:]:
