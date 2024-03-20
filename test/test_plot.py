@@ -21,32 +21,38 @@ def test_plot_property():
     key_times = [0.01, 0.02]
     # print(HEAD.pose)
     plt.clf()
-    line = Plot(HEAD).plot_property(xlim=(0, 0.1), 
+    line = Plot(HEAD).plot_property(xproperty='time',
+                                    xlim=(0, 0.1), 
                                     ylim=(-220, 220),
                                     show=False)
     plt.clf()
-    line = Plot(HEAD).plot_property(property='velocity', 
+    line = Plot(HEAD).plot_property(xproperty='time',
+                                    yproperty='velocity', 
                                     xlim=(0, 0.1), 
                                     ylim=(-220, 220), 
                                     key_times=key_times,
                                     show=False) 
     plt.clf()
     wax9 = Wax9('resources/example_imu.csv', time_offset=-59.335, id='WAX-9')
-    line = Plot(HEAD, wax9).plot_property(xlim=(0, 0.1), 
+    line = Plot(HEAD, wax9).plot_property(xproperty='time',
+                                          xlim=(0, 0.1), 
                                           ylim=(-220, 220), 
                                           show=False)
     plt.clf()
-    line = Plot(HEAD).plot_property(property='pose',
+    line = Plot(HEAD).plot_property(xproperty='time',
+                                    yproperty='pose',
                                     xlim=(0, 0.1), 
                                     ylim=(-220, 220),
                                     show=False)
     plt.clf()
-    line = Plot(HEAD).plot_property(property='acceleration',
+    line = Plot(HEAD).plot_property(xproperty='time',
+                                    yproperty='acceleration',
                                     xlim=(0, 0.1), 
                                     ylim=(-220, 220),
                                     show=False)
     plt.clf()
-    line = Plot(wax9).plot_property(xlim=(0, 0.1), 
+    line = Plot(wax9).plot_property(xproperty='time',
+                                    xlim=(0, 0.1), 
                                     ylim=(-220, 220),
                                     show=False)
     plt.clf()
@@ -54,7 +60,8 @@ def test_plot_property():
 def test_plot_summarise():
     plt.clf()
     wax9 = Wax9('resources/example_imu.csv', time_offset=-59.335, id='WAX-9')
-    plot = Plot(HEAD, wax9).plot_property(xlim=(0, 0.1),  
+    plot = Plot(HEAD, wax9).plot_property(xproperty='time',
+                                          xlim=(0, 0.1),  
                                           show=False)
 
     plot.summarise()
