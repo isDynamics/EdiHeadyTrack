@@ -63,6 +63,18 @@ If you use `EdiHeadyTrack` in you work, please cite the following publication:
 
 
 As BibTeX:
+@inproceedings{aston_automatic_2023,
+	title = {An automatic, markerless approach to measuring head kinematics in soccer},
+	url = {https://www.research.ed.ac.uk/en/publications/an-automatic-markerless-approach-to-measuring-head-kinematics-in-},
+	language = {English},
+	urldate = {2023-11-03},
+	booktitle = {International {Research} {Council} on {Biomechanics} of {Injury}: {IRCOBI} {Europe} {Conference} 2023},
+	publisher = {International Research Council on Biomechanics of Injury},
+	author = {Aston, Thomas and Teixeira-Dias, Filipe},
+	month = may,
+	year = {2023},
+	file = {Full Text PDF:C\:\\Users\\s1710722\\Zotero\\storage\\B76CPD6Z\\Aston and Teixeira-Dias - 2023 - An automatic, markerless approach to measuring hea.pdf:application/pdf},
+}
 
 <!-- ```
 @article{litstudy,
