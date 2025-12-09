@@ -1,104 +1,90 @@
-![Logo](https://raw.githubusercontent.com/isdynamics/ediheadytrack/master/resources/logo_main.png)
+# Installation Guide
 
-[![Version](https://img.shields.io/pypi/v/EdiHeadyTrack)](https://pypi.org/project/EdiHeadyTrack/)
-[![License](https://img.shields.io/github/license/isDynamics/EdiHeadyTrack)](https://github.com/isDynamics/EdiHeadyTrack/blob/master/LICENSE)
-[![Build Status - GitHub](https://github.com/isDynamics/EdiHeadyTrack/workflows/pytesting/badge.svg)](https://github.com/isDynamics/EdiHeadyTrack/actions/workflows/pytesting.yml)
-[![codecov](https://codecov.io/gh/isDynamics/EdiHeadyTrack/branch/master/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/isDynamics/EdiHeadyTrack)
-<!-- [![Documentation Status](https://readthedocs.org/projects/ediheadytrack/badge/?version=latest)](https://ediheadytrack.readthedocs.io/en/latest/?badge=latest) -->
-<!-- # EdiHeadyTrack -->
+EdiHeadyTrack supports both **PyTorch** and **TensorFlow** for model inference. To keep the base installation clean and flexible, deep learning frameworks are optional dependencies.
 
-## Contributors 
+## Prerequisites
 
-<a href="https://github.com/isDynamics/EdiHeadyTrack/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=isDynamics/EdiHeadyTrack" />
-</a>
+- **Python:** Version 3.8 to 3.10 required.
+- **GPU Usage:** NVIDIA GPU with latest drivers (for GPU acceleration).
+- **Frameworks:** Install using the commands below for proper GPU support.
 
-<!-- Made with [contrib.rocks](https://contrib.rocks). -->
+---
 
-<!-- ## Table of contents
-- [EdiHeadyTrack](#ediheadytrack)
-  - [Table of contents](#table-of-contents)
-  - [About](#about)
-  - [Technologies](#technologies)
-  - [Setup](#setup)
-  - [Citation](#citation)
-  - [To do](#to-do)
-  - [Getting Involved](#getting-involved)
-  - [Citations](#citations) -->
+## 1. Core Package (CPU-Only)
 
-## About
-EdiHeadyTrack is a Python package for measuring head kinematics using markerless head pose detection methods. The current implementation primarily uses the FaceMesh module of MediaPipe's Python API for facial landmark detection alongside OpenCV for handling simple computer vision tasks.
+Install the core library and essential scientific dependencies (NumPy, pandas, OpenCV, etc.):
 
-Full documentation for EdiHeadyTrack can be found [here](https://ediheadytrack.readthedocs.io).
-
-
-## Technologies
-Project is created with:
-* Python 3.9.0
-	
-## Setup
-EdiHeadyTrack is available on [PyPI](https://pypi.org/project/EdiHeadyTrack/)! Install using:
 ```bash
 pip install EdiHeadyTrack
 ```
-For further installation instructions, consult the [documentation](https://ediheadytrack.readthedocs.io/en/latest/installation.html).
 
-## Example
-An example output from EdiHeadyTrack is shown below. A full worked example detailing how this can be achieved is provided [here](https://ediheadytrack.readthedocs.io/en/latest/example.html). 
-![Example image](https://raw.githubusercontent.com/isDynamics/EdiHeadyTrack/master/resources/comparison_readme.png)
+---
 
+## 2. Framework Installation Options (CPU/GPU)
 
-<!-- ## Change log
-See [CHANGELOG.md](https://github.com/isDynamics/EdiHeadyTrack/blob/master/CHANGELOG.md).
+It is highly recommended to use a virtual environment (`venv` or `conda`).
 
+### Option A: TensorFlow / Keras Support
 
-## Contributing
-See [CONTRIBUTING.md](https://github.com/isDynamics/EdiHeadyTrack/blob/master/CONTRIBUTING.md). -->
+For TensorFlow/Keras-based models (including deepface):
 
+```bash
+pip install EdiHeadyTrack[tf-gpu]
+```
 
-## Citation
-If you use `EdiHeadyTrack` in you work, please cite the following publication:
+- Installs TensorFlow 2.15, which will attempt to detect and use a compatible CUDA environment automatically.
 
-<!-- > S. Heldens, A. Sclocco, H. Dreuning, B. van Werkhoven, P. Hijma, J. Maassen & R.V. van Nieuwpoort (2022), "litstudy: A Python package for literature reviews", SoftwareX 20 -->
+---
 
+### Option B: PyTorch Support
 
-As BibTeX:
+For PyTorch-based models (including ultralytics, 6DRepNet, VGGHeads):
 
-@inproceedings{aston_automatic_2023,
-	title = {An automatic, markerless approach to measuring head kinematics in soccer},
-	url = {https://www.research.ed.ac.uk/en/publications/an-automatic-markerless-approach-to-measuring-head-kinematics-in-},
-	language = {English},
-	urldate = {2023-11-03},
-	booktitle = {International {Research} {Council} on {Biomechanics} of {Injury}: {IRCOBI} {Europe} {Conference} 2023},
-	publisher = {International Research Council on Biomechanics of Injury},
-	author = {Aston, Thomas and Teixeira-Dias, Filipe},
-	month = may,
-	year = {2023},
-}
+**Step 1:** Install PyTorch for your CUDA version (visit [PyTorch official site](https://pytorch.org/get-started/locally/) for the latest command).
 
-<!-- ```
-@article{litstudy,
-    title = {litstudy: A Python package for literature reviews},
-    journal = {SoftwareX},
-    volume = {20},
-    pages = {101207},
-    year = {2022},
-    issn = {2352-7110},
-    doi = {https://doi.org/10.1016/j.softx.2022.101207},
-    url = {https://www.sciencedirect.com/science/article/pii/S235271102200125X},
-    author = {S. Heldens and A. Sclocco and H. Dreuning and B. {van Werkhoven} and P. Hijma and J. Maassen and R. V. {van Nieuwpoort}},
-}
-``` -->
+Example for CUDA 12.1:
 
-## Getting Involved
-For any suggestions, please [create a new issue](https://github.com/isDynamics/EdiHeadyTrack/issues).
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+```
 
-<!-- ## Citations -->
-<!-- 1. Teixeira-Dias, F. (1995). *Numerical simulation of tensile and shear tests in plane strain and plane stress* (Doctoral dissertation)
-2. Teixeira-Dias, F. and Menezes, L.F. (2001), *Numerical aspects of finite element simulations of residual stresses in metal matrix composites*. Int. J. Numer. Meth. Engng., 50: 629-644.
+**Step 2:** Install EdiHeadyTrack with PyTorch extras:
 
+```bash
+pip install EdiHeadyTrack[torch-gpu]
+```
 
-[1]: https://www.researchgate.net/publication/237021517_Numerical_simulation_of_tensile_and_shear_tests_in_plane_strain_and_plane_stress
-[2]: https://doi.org/10.1002/1097-0207(20010130)50:3<629::AID-NME41>3.0.CO;2-7 -->
+---
 
+### Option C: Install Both Frameworks
 
+If you need both TensorFlow and PyTorch:
+
+1. Follow PyTorch GPU installation steps above.
+2. Install combined extras:
+
+```bash
+pip install EdiHeadyTrack[all]
+```
+
+---
+
+## Compatibility Check
+
+Verify GPU access in your Python environment:
+
+**PyTorch:**
+```python
+import torch
+print(f"PyTorch CUDA available: {torch.cuda.is_available()}")
+```
+
+**TensorFlow:**
+```python
+import tensorflow as tf
+print(f"TensorFlow GPU devices: {tf.config.list_physical_devices('GPU')}")
+```
+
+---
+
+**Tip:** Always check official framework documentation for the latest installation instructions and CUDA compatibility.

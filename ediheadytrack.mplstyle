@@ -1,0 +1,64 @@
+# =========================
+# Edi: time-series (paper)
+# =========================
+
+# ----- Fonts & LaTeX -----
+text.usetex: True
+text.latex.preamble: \usepackage[cm]{sfmath}
+font.family: sans-serif
+font.sans-serif: cm
+font.size: 12
+axes.unicode_minus: True
+
+# ----- Lines / patches -----
+lines.linewidth: 1.0
+lines.antialiased: True
+patch.linewidth: 0.5
+
+# ----- Scatter defaults -----
+scatter.marker: o
+
+# ----- Axes -----
+axes.titlesize: 12
+axes.labelsize: 12
+axes.grid: False
+axes.spines.top: True
+axes.spines.right: True
+
+# ----- Ticks -----
+xtick.direction: in
+ytick.direction: in
+xtick.labelsize: 10
+ytick.labelsize: 10
+xtick.minor.visible: True
+ytick.minor.visible: True
+xtick.major.size: 4
+ytick.major.size: 4
+xtick.minor.size: 2
+ytick.minor.size: 2
+
+# ----- Legend -----
+legend.frameon: False
+legend.fontsize: 8
+legend.title_fontsize: 10
+legend.loc: best
+legend.handlelength: 1.5
+legend.borderaxespad: 0.5
+
+# ----- Figure / layout -----
+figure.figsize: 8, 3
+figure.dpi: 150
+savefig.format: pdf
+savefig.bbox: tight
+savefig.pad_inches: 0.1
+savefig.dpi: 300
+figure.autolayout: False
+
+# ----- PDF/PS embedding -----
+pdf.use14corefonts: False
+pdf.fonttype: 42
+ps.fonttype: 42
+
+# ----- Misc -----
+errorbar.capsize: 0
+image.cmap: viridis

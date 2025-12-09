@@ -1,107 +1,54 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    video.py                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/04/25 10:00:46 by taston            #+#    #+#              #
-#    Updated: 2023/05/30 10:09:03 by taston           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 import cv2
+import os
 
 class Video:
-    """
-    A class representing a Video
-
-    ...
+    def __init__(self, video_path):
+        """
+        Load a video from file and initialize frame extraction.
+        :param video_path: Path to the video file.
+        """
+        if not os.path.exists(video_path):
+            raise FileNotFoundError(f"Video file not found: {video_path}")
+        
+        self.video_path = video_path
+        self.cap = cv2.VideoCapture(video_path)
+        if not self.cap.isOpened():
+            raise ValueError(f"Failed to open video file: {video_path}")
+        
+        self.frame_count = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        self.fps = self.cap.get(cv2.CAP_PROP_FPS)
+        self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     
-    Attributes
-    ----------
-    cap : 
-
-    filename : str
-        path to video file
-    fps : int
-        framerate in frames per second
-    height : int
-        pixel height of video
-    total_frames : int
-        length of video in frames
-    width : int
-        pixel width of video
-    writer : 
-
-
-    Methods
-    -------
-    create_writer()
-        creates video writer object
-    get_dim()
-        gets video dimensions
-    get_fps()
-        gets video fps
-    get_length()
-        gets length of video in frames
-    """
-    def __init__(self, filename=None):
-        if filename:
-            self.filename = filename
-            self.cap = self._open_vid()
-            self.width, self.height = self.get_dim()
-            self.total_frames = self.get_length()
-            self.fps = self.get_fps()
-
-    def _open_vid(self):
-        '''
-        Open specified video file and create capture object
-        '''
-        cap = cv2.VideoCapture(self.filename)
-        return cap
+    def frames(self):
+        """
+        Generator function to yield frames from the video.
+        :return: Iterator over frames as numpy arrays.
+        """
+        while self.cap.isOpened():
+            ret, frame = self.cap.read()
+            if not ret:
+                break
+            yield frame
+        self.cap.release()
     
-    def create_writer(self):
-        '''
-        Create writer object for recording videos based on chosen video.
-        '''
-        self.writer = cv2.VideoWriter('calibration.mp4',
-                            cv2.VideoWriter_fourcc(*'mp4v'),
-                            self.fps,
-                            (self.width, self.height))
- 
-    def get_dim(self):
-        '''
-        Get video resolution
-        '''
-        width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        return width, height
-
-    def get_length(self):
-        '''
-        Get length of video in frames
-        '''
-        total_frames = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        return total_frames
+    def get_frame(self, frame_idx):
+        """
+        Get a specific frame by index.
+        :param frame_idx: Index of the frame to retrieve.
+        :return: The requested frame as a numpy array.
+        """
+        if frame_idx < 0 or frame_idx >= self.frame_count:
+            raise IndexError("Frame index out of range")
+        
+        self.cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
+        ret, frame = self.cap.read()
+        if not ret:
+            raise ValueError("Failed to read frame")
+        return frame
     
-    def get_fps(self):
-        '''
-        Get framerate of video in fps
-        '''
-        fps = round(self.cap.get(cv2.CAP_PROP_FPS))
-        return fps
-    
-    def __str__(self):
-        return ('-'*60 + '\n' + 
-                'Video data:' + '\n' + 
-                '-'*60 + '\n' + 
-                f'Video resolution: {self.width} x {self.height} pixels' + '\n' +
-                f'Length of video: {self.total_frames} frames' + '\n' + 
-                f'Framerate: {self.fps} fps' + '\n' +
-                '-'*60)
-        # return 'Video'
-    
-    
-
-    
+    def release(self):
+        """
+        Release the video capture object.
+        """
+        self.cap.release()

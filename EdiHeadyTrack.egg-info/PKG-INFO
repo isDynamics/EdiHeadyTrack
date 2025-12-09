@@ -1,0 +1,33 @@
+Metadata-Version: 2.4
+Name: EdiHeadyTrack
+Version: 0.1.0
+Summary: Benchmarking head pose estimation against sensor-based ground truth.
+Author: Thomas Aston
+Author-email: tjn.aston@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8,<3.12
+Requires-Dist: numpy<3,>=1.23
+Requires-Dist: pandas<3,>=1.5
+Requires-Dist: scipy<2,>=1.9
+Requires-Dist: matplotlib<4,>=3.6
+Requires-Dist: seaborn<0.14,>=0.12
+Requires-Dist: tqdm<5,>=4.66
+Requires-Dist: PyYAML<7,>=6.0
+Requires-Dist: Pillow<12,>=9.5
+Requires-Dist: opencv-python<5,>=4.8
+Requires-Dist: trimesh<5,>=4.0
+Provides-Extra: full
+Requires-Dist: head_detector@ git+https://github.com/ThomasAston/VGGHeads.git@main ; extra == "full"
+Requires-Dist: batch_face@ git+https://github.com/elliottzheng/batch-face.git@master ; extra == "full"
+Requires-Dist: sixdrepnet@ git+https://github.com/ThomasAston/6DRepNet.git@master ; extra == "full"
+Requires-Dist: wandb<0.19,>=0.16; extra == "full"
+Requires-Dist: thop<0.2,>=0.1.1; extra == "full"
+Requires-Dist: ultralytics<9,>=8.0.0; extra == "full"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary

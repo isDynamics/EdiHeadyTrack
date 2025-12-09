@@ -1,277 +1,262 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    plot.py                                            :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: taston <thomas.aston@ed.ac.uk>             +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/04/27 10:18:49 by taston            #+#    #+#              #
-#    Updated: 2024/03/20 17:04:06 by taston           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-
-from .imu import Wax9
-from .sensordata import *
+import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.offsetbox import (TextArea, DrawingArea, OffsetImage,
-                                  AnnotationBbox)
-import matplotlib.colors as mcolors
+import os
+from mpl_toolkits.mplot3d import Axes3D  # noqa: F401  (needed for 3D proj)
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+import trimesh
+from scipy.spatial.transform import Rotation as R
+import cv2
+from pathlib import Path
+from importlib.resources import files, as_file  # Python 3.9+
+
+
+pkg = __package__ or __name__.split('.')[0]
+res = files(pkg).joinpath("ediheadytrack.mplstyle")
+if res is not None:
+    with as_file(res) as style_path:
+        plt.style.use(['tableau-colorblind10', str(style_path)])
+        
+# Access current style’s color cycle
+_CYCLE = plt.rcParams['axes.prop_cycle'].by_key().get('color', [])
+def _c(i):  # safe color picker
+    return _CYCLE[i % len(_CYCLE)] if _CYCLE else None
 
 class Plot:
-    """
-    A class representing a Plot
-
-    ...
-    
-    Attributes
-    ----------
-    colors : list
-        list of colors used in plots
-    sensors : list, SensorData
-        list of SensorData objects to be plotted
-    lines : list, dict 
-        list of dicts containing data of each line being plotted 
-
-    Methods
-    -------
-    plot_property(self, property='velocity', xlim=None, ylim=None, key_times=[], show=True):
-        plots a time comparison between sensor data
-    """
-    def __init__(self, *sensors):
-        self.colors = ['k', 'c', 'orange', 'r', 'g']
-        self.linestyles = ['solid', 'dashed', 'dotted', 'dashdot']
-        self.sensors = []
-        self.heads = []
-        self.lines = []
-        for sensor in sensors:
-            if not isinstance(sensor, SensorData):
-                raise TypeError(f'Attempted to plot type {type(sensor)}. Only SensorData objects may be plotted here!')
-            else:
-                self.sensors.append(sensor)
-                if isinstance(sensor, Head):
-                    self.heads.append(sensor)
-                
-        # print(self.heads)
-
-
-    def plot_property(self, xproperty='frame', yproperty='velocity', 
-                      xlim=None, ylim=None, key_times=[], key_frames=[], show=True):
-        """Plots comparison between sensor data
-        
-        Parameters
-        ----------
-        xproperty : str
-            specifies which property to be plotted on x axis from ('frame', 'time')
-        yproperty : str
-            specifies which property to be plotted on y axis from ('pose', 'velocity', 'acceleration')
-        xlim : tuple, float
-            range of times to be plotted over (lower limit, upper limit)
-        ylim : tuple, float
-            range of y values to be plotted over (lower limit, upper limit)
-        key_times : list, float, optional
-            key time points to display frame images for
-        key_frames : list, float, optional
-            key frame numbers to display frame images for  
-        *sensors : SensorData
-            sensor data objects to be added to plot
+    @staticmethod
+    def plot_euler_time_series(output=None, show=False, **eulers):
         """
-        # plt.rcParams.update({'font.size': 14, "text.usetex": True, "font.family": "serif"})
-        # plt.rcParams.update({'mathtext.fontset': 'cm'})
-        plt.rcParams.update({'font.size': 14})
-        gridspec_kw={'height_ratios': [len(self.heads), 1, 1, 1]}
-        fig, axs = plt.subplots(4,1,figsize=[6,8], gridspec_kw=gridspec_kw)    
+        Plot time series of roll, pitch, and yaw angles from sensor and predicted data.
+        Usage: Plot.plot_euler_time_series(MoCap=arr_gt, ModelA=arr_pred, ...)
+        Each array shape: (T, 3) in radians (roll, pitch, yaw).
+        """
+        labels = [r'$\phi$', r'$\theta$', r'$\psi$']
+        sources = list(eulers.keys())
 
-        # Loop over each sensor and plot the necessary data
-        for sensor_idx, sensor in enumerate(self.sensors):
-            if hasattr(sensor, yproperty):
-                property_dict = getattr(sensor, yproperty)
-                start=2
-                # Loop over each axis and plot the necessary data
-                for ax_idx, ykey in enumerate(list(property_dict.keys())[start:]):
-                    # axs[ax_idx+1] = plt.subplot(len(list(property_dict.keys())), 1, ax_idx+1)
-                    axs[ax_idx+1].grid(color='0.95')
-                    if yproperty == 'pose':
-                        axs[ax_idx+1].set_ylabel(r'$\theta_{{\mathrm{{key}}}}$ (deg)'.replace('key', ykey))
-                    elif yproperty == 'velocity':
-                        if xproperty == 'frame':
-                            axs[ax_idx+1].set_ylabel(r'$\omega_{{\mathrm{{key}}}}$ (deg/frame)'.replace('key', ykey))
-                        elif xproperty == 'time':
-                            axs[ax_idx+1].set_ylabel(r'$\omega_{{\mathrm{{key}}}}$ (deg/s)'.replace('key', ykey))
-                    elif yproperty =='acceleration':
-                        if xproperty == 'frame':
-                            axs[ax_idx+1].set_ylabel(r'$\alpha_{{\mathrm{{key}}}}$ (deg/frame$^2$)'.replace('key', ykey))
-                        elif xproperty == 'time':
-                            axs[ax_idx+1].set_ylabel(r'$\alpha_{{\mathrm{{key}}}}$ (deg/s$^2$)'.replace('key', ykey))
+        fig, axes = plt.subplots(1, 3, figsize=(8, 3), sharex=True, sharey=True)
 
-                    if xlim:
-                        axs[ax_idx+1].set_xlim(xlim)
-                    if ylim:
-                        axs[ax_idx+1].set_ylim(ylim)
-                    lims = []
+        for i in range(3):
+            axes[i].set_title(labels[i])
+            for j, (key, signal) in enumerate(eulers.items()):
+                
+                signal = np.rad2deg(np.asarray(signal))
+                time = np.linspace(0, 100, len(signal))
+                axes[i].set_xlim([0, 100])
 
+                if key.lower() in ('mocap', 'gt', 'groundtruth', 'ground_truth'):
+                    axes[i].plot(time, signal[:, i], label='GT', color=_c(2), linewidth=1, alpha=0.7)
+                elif key.lower()=='sixdrepnet':
+                    axes[i].scatter(
+                        time, signal[:, i],
+                        label=f'6DRepNet360',
+                        color=_c(1), alpha=0.55)
+                else:
+                    axes[i].scatter(
+                        time, signal[:, i],
+                        label=f'{key}',
+                        color=_c(1), alpha=0.55)
+                
+        axes[0].set_ylabel('Euler angle (deg)')
+        axes[0].legend()
+        axes[1].set_xlabel(r'$t$ (ms)')
+        plt.tight_layout()
 
-                    # Set axis labels and key frame/time line markers
-                    if xproperty == 'frame':
-                        x_data = property_dict['frame']
-                        for frame in key_frames:
-                            axs[ax_idx+1].axvline(x=frame, color='green', ls=':')
-                    elif xproperty == 'time':
-                        x_data = property_dict['time']
-                        for time in key_times:
-                            axs[ax_idx+1].axvline(x=time, color='green', ls=':')
-                    y_data = property_dict[ykey]
-                        
-                    # cropping data
-                    if xlim:
-                        for lim in xlim:
-                            for time_idx, time in enumerate(x_data):
-                                if time > lim:
-                                    lims.append(time_idx)
-                                    break
-                        
-                        x_data = x_data[lims[0]:lims[1]]
-                        y_data = y_data[lims[0]:lims[1]]
-
-    
-                    # Add data lines for data to plot
-                    line, = axs[ax_idx+1].plot(x_data,
-                                    y_data,
-                                    label=f'{sensor.id}',
-                                    color=self.colors[sensor_idx],
-                                    ls=self.linestyles[sensor_idx])
-                    
-                    # Store data for summary in self.lines
-                    self.lines.append({'sensor':    sensor.id,
-                                       'property':  f'{ykey}, {yproperty}',
-                                       'values':    y_data})
-                    
-                    # If the sensor is from head pose estimation, add images at key frames
-                    if isinstance(sensor, Head):
-                        if key_times:
-                            key_frames = [int(sensor.posedetector.video.fps*time) for time in key_times]
-                        else:
-                            key_frames = key_frames
-                    
-                    
-                    # Remove xticks from all but the bottom plot
-                    if ax_idx != 2:
-                        plt.setp(axs[ax_idx+1].get_xticklabels(), visible=False)
-                    else:
-                        if xproperty == 'frame':
-                            axs[ax_idx+1].set_xlabel(r'Frame')
-                        elif xproperty == 'time':
-                            axs[ax_idx+1].set_xlabel(r'Time (s)')
-
-                    # Remove yticks from top plot
-                    if ax_idx == 0: 
-                        axs[ax_idx].set_xticks([])
-                        axs[ax_idx].set_yticks([])
-                        axs[ax_idx].tick_params(left=False)
-                    
-                    # Place legend
-                    if ax_idx == 1: 
-                        handles, labels = axs[ax_idx+1].get_legend_handles_labels()
-                        axs[ax_idx+1].legend(handles, labels, bbox_to_anchor=(1.0, 0.85), loc=2)
-            else:
-                # If the sensor does not have the property requested, print a warning
-                print(f'{sensor} does NOT have property {yproperty}')
-        
-        
-        # Add images to top plot
-        axs[0] = plt.subplot(411, sharex=axs[1])
-        if xproperty == 'frame':
-            for frame in key_frames:
-                axs[0].axvline(x=frame, color='green', ls=':')
-        elif xproperty == 'time':
-            for time in key_times:
-                axs[0].axvline(x=time, color='green', ls=':')    
-        plt.setp(axs[0].get_xticklabels(), visible=False)
-        plt.setp(axs[0].get_yticklabels(), visible=False)
-
-        if key_times or key_frames:
-            for sensor_idx, sensor in enumerate(self.heads):
-                for idx, frame in enumerate(key_frames):
-                    img = sensor.posedetector.tracking_frames[frame]
-                    frame_index = sensor.posedetector.pose['frame'].index(frame)
-                    x_list = [pos[0] for pos in sensor.posedetector.face2d['all landmark positions'][frame_index]]
-                    y_list = [pos[1] for pos in sensor.posedetector.face2d['all landmark positions'][frame_index]]
-                    # print(x_list)
-                    # print(y_list)
-                    top_bound = max(0, min(y_list[:]) - 200)
-                    bottom_bound = min(sensor.posedetector.video.height, max(y_list[:]) + 200)
-                    left_bound = max(0, min(x_list[:]) - 200)
-                    right_bound = min(sensor.posedetector.video.width, max(x_list[:]) + 200)
-                    
-                    img = img[top_bound:bottom_bound, left_bound:right_bound, :]
-
-                    imagebox = OffsetImage(img, zoom=0.08)
-                    imagebox.image.axes = axs[0]
-                    
-                    if len(self.heads) == 1:
-                        if key_times:
-                            ab = AnnotationBbox(imagebox, [key_times[idx],0.5],
-                                            xybox=(1,  1),
-                                            xycoords='data',
-                                            boxcoords="offset points",
-                                            pad=0.01,
-                                            bboxprops =dict(edgecolor=self.colors[sensor_idx])
-                                            )
-                        elif key_frames:
-                            ab = AnnotationBbox(imagebox, [key_frames[idx],0.5],
-                                            xybox=(1,  1),
-                                            xycoords='data',
-                                            boxcoords="offset points",
-                                            pad=0.01,
-                                            bboxprops =dict(edgecolor=self.colors[sensor_idx])
-                                            )
-                        axs[0].add_artist(ab)
-                    else:
-                        if key_times:
-                            ab = AnnotationBbox(imagebox, [key_times[idx],0.7-0.4*sensor_idx/(len(self.heads)-1)],
-                                                xybox=(1,  1),
-                                                xycoords='data',
-                                                boxcoords="offset points",
-                                                pad=0.01,
-                                                bboxprops =dict(edgecolor=self.colors[sensor_idx])
-                                                )
-                        elif key_frames:
-                            ab = AnnotationBbox(imagebox, [key_frames[idx],0.7-0.4*sensor_idx/(len(self.heads)-1)],
-                                                xybox=(1,  1),
-                                                xycoords='data',
-                                                boxcoords="offset points",
-                                                pad=0.01,
-                                                bboxprops =dict(edgecolor=self.colors[sensor_idx])
-                                                )
-                        axs[0].add_artist(ab)
-        
-        # Save and show plot
-        plt.savefig('resources/comparison.png', bbox_inches='tight')
-        plt.savefig('resources/comparison.svg', bbox_inches='tight')
-        if show == True:
+        if output:
+            # If user passed an extension, respect it; otherwise default to PDF (style has savefig.* defaults)
+            root, ext = os.path.splitext(output)
+            plt.savefig(output if ext else f'{output}.pdf')
+        if show:
             plt.show()
-            plt.tight_layout
-        
-        return self
+        plt.close()
 
-    def summarise(self):
-        '''
-        Produces a summary of the maximum values of each line in a 
-        Plot object.
-        '''
-        sensor_prev = None
-        for line in self.lines:
-            sensor = line['sensor']
-            if sensor != sensor_prev:
-                print('-'*46)
-                print(f'{sensor} plot summary')
-                print('-'*46)
-                print('{:<30} {:>15}'.format(line['property'], 
-                                             round(abs(max(line['values'], key=abs)), 2)))
-            else:
-                print('{:<30} {:>15}'.format(line['property'], 
-                                             round(abs(max(line['values'], key=abs)), 2)))
-            
-            sensor_prev = sensor
+    # TODO change the labelling to use keys of supplied analyser objects?
+    @staticmethod
+    def plot_geodesic_errors(output=None, show=False, to_identity=None, framewise=None, from_start=None):
+        """
+        Plot geodesic distance time series (e.g., from PoseAnalyzer).
+        :param framewise: list-like of arrays shaped (T,) or nested like [[T_vals]]
+        :param from_start: list-like of arrays shaped (T,) or nested like [[T_vals]]
+        """
+        fig, axes = plt.subplots(1, 3, figsize=(8, 3), sharex=True, sharey=True)
+
+        # Left: rotation to identity
+        if to_identity:
+            for i, data in enumerate(to_identity):
+                arr = np.asarray(data[0] if isinstance(data, (list, tuple)) and np.ndim(data) > 1 else data)
+                time = np.linspace(0, 100, len(arr))
+                if i == 0:
+                    axes[0].plot(time, arr, label='GT', color=_c(2), linewidth=1, alpha=0.7)
+                else:
+                    axes[0].scatter(time, arr, label=f'VGGHeads', color=_c(0), alpha=0.55)
+                    
+        # Middle: rotation relative to first frame
+        if from_start:
+            for i, data in enumerate(from_start):
+                # tolerate [[...]] or [...]
+                arr = np.asarray(data[0] if isinstance(data, (list, tuple)) and np.ndim(data) > 1 else data)
+                time = np.linspace(0, 100, len(arr))
+                if i == 0:
+                    axes[1].plot(time, arr, label='GT', color=_c(2), linewidth=1, alpha=0.7)
+                else:
+                    axes[1].scatter(time, arr, label=f'VGGHeads', color=_c(0), alpha=0.55)
+
+        # Right: rotation relative to previous frame
+        if framewise:
+            for i, data in enumerate(framewise):
+                arr = np.asarray(data[0] if isinstance(data, (list, tuple)) and np.ndim(data) > 1 else data)
+                time = np.linspace(0, 100, len(arr))
+                if i == 0:
+                    axes[2].plot(time, arr, label='GT', color=_c(2), linewidth=1, alpha=0.7)
+                else:
+                    axes[2].scatter(time, arr, label=f'VGGHeads', color=_c(0), alpha=0.55)
+
+        axes[0].set_title('GE to Identity')
+        axes[1].set_title('GE from First Frame')
+        axes[2].set_title('GE from Previous Frame')
         
-        print('-'*46)
+        axes[0].set_ylabel('GE')
+        axes[0].legend()
+        axes[1].set_xlabel('Time (ms)')
+        plt.tight_layout()
+
+        if output:
+            root, ext = os.path.splitext(output)
+            plt.savefig(output if ext else f'{output}.pdf')
+        if show:
+            plt.show()
+        plt.close()
+
+    @staticmethod
+    def plot_angular_velocity_time_series(output=None, show=False, **angular_velocities):
+        """
+        Plot time series of angular velocities (roll rate, pitch rate, yaw rate).
+        Each input array shape: (T, 3) in rad/s.
+        """
+        labels = [r'$\omega_x$', r'$\omega_y$', r'$\omega_z$']
+        fig, axes = plt.subplots(1, 3, figsize=(8, 3), sharex=True, sharey=True)
+
+        for i in range(3):
+            axes[i].set_title(labels[i])
+            for j, (key, angular_velocity) in enumerate(angular_velocities.items()):
+                angular_velocity = np.asarray(angular_velocity)
+                time = np.linspace(0, 100, len(angular_velocity))
+                axes[i].set_xlim([0, 100])
+                axes[i].plot(
+                    time, angular_velocity[:, i],
+                    label=f'{key}',
+                    color=_c(j),
+                    marker='o',
+                    markersize=3,
+                    linestyle='--',
+                    linewidth=1
+                )
+
+        axes[0].set_ylabel('Angular Velocity (rad/s)')
+        axes[0].legend()
+        axes[1].set_xlabel('Time (ms)')
+
+        plt.tight_layout()
+
+        if output:
+            root, ext = os.path.splitext(output)
+            plt.savefig(output if ext else f'{output}.pdf')
+        if show:
+            plt.show()
+        plt.close()
+
+    @staticmethod
+    def plot_head_orientation(poses, head_detections, output=None, show=True):
+        """
+        Plot a sequence of 3D head orientations in a row using an STL model,
+        with detected face images as background.
+        :param poses: list of (roll, pitch, yaw) in radians
+        :param head_detections: list of cropped head images (BGR or RGB)
+        """
+        num_poses = len(poses)
+        fig, axes = plt.subplots(1, num_poses, figsize=(8, 3), subplot_kw={'projection': '3d'})
+        if num_poses == 1:
+            axes = [axes]
+
+        stl_path = os.path.join(os.path.dirname(__file__), 'utils', 'head.stl')
+
+        # Axis visuals
+        axis_points = np.array([
+            [0, 0, -0.1],  # Lower the axis slightly
+            [1, 0, -0.1],  # X
+            [0, 1, -0.1],  # Y
+            [0, 0, 0.9],   # Z
+        ])
+        axis_lines = [(0, 1), (0, 2), (0, 3)]
+        # Use named tab colors (not dependent on prop cycle)
+        axis_colors = ['tab:red', 'tab:green', 'tab:blue']
+
+        time_index = 0
+        for ax, pose, img in zip(axes, poses, head_detections):
+            pose = list(pose)
+            # pose[1] += 0.3  # camera frame adjustment (preserved)
+
+            # Ensure RGB for display
+            if img.ndim == 3 and img.shape[-1] == 3:
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+            h, w = img.shape[:2]
+            scale_factor = w / 28000.0
+
+            head_mesh = trimesh.load_mesh(stl_path)
+            head_mesh.apply_scale(scale_factor)
+
+            zoom = 0.0005
+            ax.imshow(img, extent=[-w * zoom, w * zoom, -h * zoom, h * zoom], zorder=-1)
+
+            rotation = R.from_euler('xyz', pose, degrees=False).as_matrix()
+            # transformed_vertices = (rotation @ head_mesh.vertices.T).T + np.array([0, 0, 0.1])
+
+            # transformed_mesh = trimesh.Trimesh(vertices=transformed_vertices, faces=head_mesh.faces)
+
+            # collection = Poly3DCollection(
+            #     transformed_mesh.vertices[transformed_mesh.faces],
+            #     facecolors='white',
+            #     linewidths=0.5,
+            #     edgecolors='k',
+            #     alpha=0.5,
+            #     shade=True
+            # )
+            # ax.add_collection3d(collection)
+            # ax.collections[-1].set_edgecolor('none')
+
+            # Draw axes
+            transformed_axis_points = (rotation @ axis_points.T).T
+            for (start, end), c in zip(axis_lines, axis_colors):
+                ax.plot(
+                    [transformed_axis_points[start, 0], transformed_axis_points[end, 0]],
+                    [transformed_axis_points[start, 1], transformed_axis_points[end, 1]],
+                    [transformed_axis_points[start, 2], transformed_axis_points[end, 2]],
+                    color=c, linewidth=2
+                )
+
+            # Add time text below each image
+            # time_index = axes.index(ax)
+            ax.text2D(0.5, -0.1, fr'$t={time_index * 20}$ ms', transform=ax.transAxes,
+                      ha='center', va='center', fontsize=10)
+            time_index += 1
+            # 3D pane config
+            ax.set_xlim([-0.5, 0.5])
+            ax.set_ylim([-0.5, 0.5])
+            ax.set_zlim([-0.5, 0.5])
+            ax.set_xticks([])
+            ax.set_yticks([])
+            ax.set_zticks([])
+            ax.set_xlabel("")
+            ax.set_ylabel("")
+            ax.set_zlabel("")
+            ax.grid(False)
+            ax.view_init(elev=0, azim=0)
+            ax.set_axis_off()
+            ax.set_aspect('equal')
+
+        plt.tight_layout()
+        if output:
+            root, ext = os.path.splitext(output)
+            plt.savefig(output if ext else f'{output}.pdf')
+        if show:
+            plt.show()
+        plt.close()
